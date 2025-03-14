@@ -1,24 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vayo - Road Transport Network Telematics Platform
+
+A modern, professional landing page for Vayo, a Road Transport Network Telematics platform built with Next.js and Tailwind CSS.
+
+## Features
+
+- Clean, minimalistic design with a white background
+- Responsive layout for all device sizes
+- Modern UI components
+- Tailwind CSS for styling
+
+## Prerequisites
+
+- Node.js 16.x or higher
+- npm or yarn
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository
+
+```bash
+git clone <repository-url>
+cd vayo-app
+```
+
+2. Install dependencies
+
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Run the development server
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `app/`: Next.js application directory
+  - `page.tsx`: Main landing page component
+  - `layout.tsx`: Root layout component
+  - `globals.css`: Global CSS styles
+- `public/`: Static assets
+- `package.json`: Project dependencies and scripts
+
+## Customization
+
+Feel free to customize the content, colors, and design to match your specific requirements. The main components are:
+
+1. Navigation Header
+2. Hero Section
+3. Features Section
+4. Call-to-Action Section
+5. Footer
+
+## Technologies Used
+
+- [Next.js](https://nextjs.org/) - React framework
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
+- [React](https://reactjs.org/) - JavaScript library for building user interfaces
 
 ## Learn More
 
