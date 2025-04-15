@@ -16,7 +16,10 @@ export default function Home() {
             <a href="#about" className="text-secondary hover:text-primary transition-colors">About</a>
             <a href="#contact" className="text-secondary hover:text-primary transition-colors">Contact</a>
           </nav>
-          <div>
+          <div className="flex items-center gap-4">
+            <Link href="/login" className="btn-outline">
+              Login
+            </Link>
             <Link href="/get-started" className="btn-primary">
               Get Started
             </Link>

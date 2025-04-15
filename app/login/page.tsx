@@ -58,12 +58,8 @@ export default function Login() {
           throw new Error(data.error || 'Invalid credentials');
         }
 
-        // Login successful - redirect based on user role
-        if (data.user.role === 'driver') {
-          router.push('/driver-dashboard');
-        } else {
-          router.push('/owner-dashboard');
-        }
+        // Login successful - redirect to dashboard
+        router.push('/dashboard');
       } catch (error) {
         setErrors(prev => ({
           ...prev,

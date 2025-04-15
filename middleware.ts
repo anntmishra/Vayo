@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
-import jwt from "jsonwebtoken";
+import * as jose from "jose";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 
@@ -17,7 +17,7 @@ const publicRoutes = [
   "/favicon.ico",
 ];
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   // Allow access to public routes
@@ -33,13 +33,14 @@ export function middleware(request: NextRequest) {
   }
 
   try {
-    // Verify the token
-    const decoded = jwt.verify(sessionToken, JWT_SECRET);
+    // Verify the token using jose
+    const secretKey = new TextEncoder().encode(JWT_SECRET);
+    const { payload } = await jose.jwtVerify(sessionToken, secretKey);
 
     // Add user info to headers for route handlers
     const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-user-id", (decoded as any).userId);
-    requestHeaders.set("x-user-role", (decoded as any).role);
+    requestHeaders.set("x-user-id", payload.userId as string);
+    requestHeaders.set("x-user-role", payload.role as string);
 
     // Continue to route with added headers
     return NextResponse.next({
