@@ -71,8 +71,10 @@ export default function Fleet() {
   }, [router]);
 
   const generateMockVehicles = (count: number) => {
-    const statuses = ['active', 'idle', 'maintenance'];
-    const models = ['Volvo FH16', 'Mercedes Actros', 'Scania R500', 'MAN TGX', 'DAF XF'];
+    const models = ['Eicher Pro 5000', 'Tata Prima', 'Mahindra Blazo', 'Ashok Leyland Captain', 'BharatBenz 3723R'];
+    const status: ('active' | 'idle' | 'maintenance')[] = ['active', 'active', 'active', 'idle', 'maintenance'];
+    const indianNames = ['Vikram Singh', 'Priya Mehta', 'Rahul Kumar', 'Ananya Patel', 'Raj Sharma', 'Neha Verma', 'Arjun Reddy', 'Deepika Gupta', 'Suresh Iyer', 'Meena Kapoor'];
+    
     const mockVehicles: Vehicle[] = [];
     
     for (let i = 1; i <= count; i++) {
@@ -94,7 +96,7 @@ export default function Fleet() {
         year: 2018 + Math.floor(Math.random() * 6),
         status: status,
         lastService: serviceDate.toISOString().split('T')[0],
-        driver: `Driver ${i}`,
+        driver: indianNames[i % indianNames.length],
         fuelLevel: Math.floor(Math.random() * 100)
       });
     }

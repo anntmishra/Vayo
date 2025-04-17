@@ -88,11 +88,6 @@ export default function GetStartedPage() {
                 <p className="mt-2 text-lg text-indigo-700">
                   Add your vehicles and customize tracking parameters to match your needs.
                 </p>
-                <div className="mt-6">
-                  <Link href="#" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-indigo-100 hover:bg-indigo-200 transition-colors">
-                    Configure Fleet
-                  </Link>
-                </div>
               </div>
             </div>
           </div>
@@ -110,11 +105,6 @@ export default function GetStartedPage() {
                 <p className="mt-2 text-lg text-indigo-700">
                   Access real-time data and insights about your fleet's performance.
                 </p>
-                <div className="mt-6">
-                  <Link href="/dashboard" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-indigo-100 hover:bg-indigo-200 transition-colors">
-                    View Dashboard
-                  </Link>
-                </div>
               </div>
             </div>
           </div>

@@ -13,6 +13,7 @@ export default function Home() {
           <nav className="hidden md:flex gap-8">
             <a href="#features" className="text-indigo-900 hover:text-indigo-600 transition-colors">Features</a>
             <Link href="/solutions" className="text-indigo-900 hover:text-indigo-600 transition-colors">Solutions</Link>
+            <Link href="/pricing" className="text-indigo-900 hover:text-indigo-600 transition-colors">Pricing</Link>
             <Link href="/about" className="text-indigo-900 hover:text-indigo-600 transition-colors">About</Link>
             <Link href="/contact" className="text-indigo-900 hover:text-indigo-600 transition-colors">Contact</Link>
           </nav>
@@ -151,6 +152,9 @@ export default function Home() {
                 <Link href="/get-started" className="bg-white text-indigo-600 hover:bg-indigo-50 py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-all inline-block">
                   Start Your Free Trial
                 </Link>
+                <Link href="/pricing" className="bg-indigo-500 text-white hover:bg-indigo-600 py-3 px-8 rounded-lg transition-colors inline-block">
+                  View Pricing
+                </Link>
                 <Link href="/contact" className="bg-indigo-700 text-white hover:bg-indigo-800 py-3 px-8 rounded-lg transition-colors inline-block">
                   Contact Sales
                 </Link>
@@ -174,6 +178,7 @@ export default function Home() {
               <h4 className="font-semibold mb-4">Company</h4>
               <ul className="space-y-2">
                 <li><Link href="/about" className="text-indigo-200 hover:text-white transition-colors">About</Link></li>
+                <li><Link href="/pricing" className="text-indigo-200 hover:text-white transition-colors">Pricing</Link></li>
                 <li><Link href="/contact" className="text-indigo-200 hover:text-white transition-colors">Careers</Link></li>
                 <li><Link href="/about" className="text-indigo-200 hover:text-white transition-colors">Blog</Link></li>
               </ul>

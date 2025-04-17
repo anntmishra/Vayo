@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useState, FormEvent, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import { registerUser } from '../lib/auth';
 
 interface FormData {
   company: string;
@@ -57,29 +58,15 @@ export default function CreateAccount() {
           email: formData.email.trim().toLowerCase(),
           password: formData.password,
           phone: formData.phone.trim(),
-          truckCount: formData.truckCount
+          truckCount: parseInt(formData.truckCount)
         };
 
-        console.log('Submitting form data:', formPayload);
-
-        const response = await fetch('/api/auth/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formPayload),
+        // Use local storage authentication instead of API
+        registerUser({
+          email: formPayload.email,
+          password: formPayload.password,
+          name: formPayload.company
         });
-
-        const data = await response.json().catch(e => {
-          console.error('Error parsing response:', e);
-          throw new Error('Failed to parse server response');
-        });
-
-        console.log('Server response:', data);
-
-        if (!response.ok) {
-          throw new Error(data.error || 'Failed to create account');
-        }
 
         // Registration successful
         router.push('/configure-fleet');

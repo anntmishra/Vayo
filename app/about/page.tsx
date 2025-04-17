@@ -50,13 +50,11 @@ export default function AboutPage() {
               Our Story
             </h2>
             <p className="mt-4 text-lg text-indigo-700">
-              Vayo was founded in 2020 with a simple mission: to revolutionize the way fleets are managed. What started as a small team of engineers and industry experts has grown into a leading fleet management solution trusted by companies worldwide.
+              Founded in 2025, Vayo was born out of a shared vision during the main DTI (Design Thinking and Innovation) project — a vision led by three passionate individuals: Anant, Pranav, and Jay. It all started with a simple but powerful question:
+              "Why can't India's road transport system be smarter, safer, and more connected — especially for the truck drivers who power our economy?"
             </p>
             <p className="mt-4 text-lg text-indigo-700">
-              We recognized the challenges fleet managers face daily—from optimizing routes and schedules to managing maintenance and ensuring driver safety. Our team set out to create a comprehensive platform that addresses these challenges through cutting-edge technology, real-time analytics, and actionable insights.
-            </p>
-            <p className="mt-4 text-lg text-indigo-700">
-              Today, Vayo serves thousands of vehicles across multiple industries, helping fleet managers reduce costs, improve efficiency, and enhance safety. As we continue to grow, our commitment to innovation and customer success remains at the heart of everything we do.
+              What began as a college project quickly grew into something much bigger: a mission to revolutionize Indian logistics.
             </p>
           </div>
           <div className="mt-10 lg:mt-0">
@@ -141,7 +139,7 @@ export default function AboutPage() {
             <div className="relative">
               <img
                 className="mx-auto h-56 w-56 rounded-full object-cover shadow-lg bg-indigo-100"
-                src="/images/team-member-1.jpg"
+                src="/images/Anant.JPG"
                 alt="Anant Mishra"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
@@ -157,7 +155,7 @@ export default function AboutPage() {
             <div className="relative">
               <img
                 className="mx-auto h-56 w-56 rounded-full object-cover shadow-lg bg-indigo-100"
-                src="/images/team-member-2.jpg"
+                src="/images/Pranav.jpeg"
                 alt="Pranav Gupta"
                 onError={(e) => {
                   e.currentTarget.onerror = null;

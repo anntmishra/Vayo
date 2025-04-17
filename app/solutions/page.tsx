@@ -12,11 +12,11 @@ export default function SolutionsPage() {
       <header className="bg-white/80 shadow-sm backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
-            <div className="flex">
+            <div className="flex-1 flex items-center justify-center">
               <div className="flex-shrink-0 flex items-center">
                 <Link href="/" className="text-2xl font-bold text-indigo-600">Vayo</Link>
               </div>
-              <nav className="ml-6 flex items-center space-x-8">
+              <nav className="mx-auto flex items-center space-x-8">
                 <Link href="/" className="text-indigo-900 hover:text-indigo-600 transition-colors">Home</Link>
                 <Link href="/about" className="text-indigo-900 hover:text-indigo-600 transition-colors">About</Link>
                 <Link href="/solutions" className="text-indigo-600 font-medium">Solutions</Link>
@@ -51,7 +51,7 @@ export default function SolutionsPage() {
       <div className="py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="border-b border-indigo-200">
-            <nav className="-mb-px flex space-x-8">
+            <nav className="-mb-px flex space-x-8 justify-center">
               <button
                 onClick={() => setActiveTab('fleet')}
                 className={`${
@@ -142,8 +142,12 @@ export default function SolutionsPage() {
                     </Link>
                   </div>
                 </div>
-                <div className="bg-indigo-100 rounded-xl p-8 flex items-center justify-center">
-                  <div className="text-indigo-700 text-lg font-medium">Fleet Management Dashboard Image</div>
+                <div className="bg-indigo-100 rounded-xl p-8 flex items-center justify-center overflow-hidden">
+                  <img 
+                    src="https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" 
+                    alt="Fleet Management Dashboard" 
+                    className="object-cover w-full h-full rounded-lg"
+                  />
                 </div>
               </div>
             )}
@@ -203,8 +207,12 @@ export default function SolutionsPage() {
                     </Link>
                   </div>
                 </div>
-                <div className="bg-purple-100 rounded-xl p-8 flex items-center justify-center">
-                  <div className="text-purple-700 text-lg font-medium">Driver Safety Interface Image</div>
+                <div className="bg-purple-100 rounded-xl p-8 flex items-center justify-center overflow-hidden">
+                  <img 
+                    src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" 
+                    alt="Driver Safety Interface" 
+                    className="object-cover w-full h-full rounded-lg"
+                  />
                 </div>
               </div>
             )}
@@ -264,8 +272,12 @@ export default function SolutionsPage() {
                     </Link>
                   </div>
                 </div>
-                <div className="bg-indigo-100 rounded-xl p-8 flex items-center justify-center">
-                  <div className="text-indigo-700 text-lg font-medium">Analytics Dashboard Image</div>
+                <div className="bg-indigo-100 rounded-xl p-8 flex items-center justify-center overflow-hidden">
+                  <img 
+                    src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" 
+                    alt="Analytics Dashboard" 
+                    className="object-cover w-full h-full rounded-lg"
+                  />
                 </div>
               </div>
             )}
@@ -290,15 +302,19 @@ export default function SolutionsPage() {
             <div className="bg-white rounded-lg shadow-xl p-8 transform transition duration-500 hover:scale-105">
               <div className="flex items-center mb-6">
                 <div className="mr-4 flex-shrink-0 h-12 w-12 bg-indigo-200 rounded-full flex items-center justify-center">
-                  <span className="text-indigo-700 font-bold">AC</span>
+                  <img 
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" 
+                    alt="David Miller" 
+                    className="h-12 w-12 rounded-full object-cover"
+                  />
                 </div>
                 <div>
-                  <h3 className="text-lg font-medium text-indigo-900">Alex Carter</h3>
-                  <p className="text-indigo-600">Fleet Manager, TransGlobal Logistics</p>
+                  <h3 className="text-lg font-medium text-indigo-900">David Miller</h3>
+                  <p className="text-indigo-600">Truck Driver, 8 years experience</p>
                 </div>
               </div>
               <p className="text-indigo-700">
-                "Since implementing Vayo's fleet management system, we've reduced our fuel costs by 15% and improved our on-time delivery performance by 22%."
+                "The Vayo app makes my daily routes so much easier. I can track my hours, find the best routes, and communicate with dispatch all in one place. It's a game changer for drivers like me."
               </p>
             </div>
 
@@ -306,15 +322,19 @@ export default function SolutionsPage() {
             <div className="bg-white rounded-lg shadow-xl p-8 transform transition duration-500 hover:scale-105">
               <div className="flex items-center mb-6">
                 <div className="mr-4 flex-shrink-0 h-12 w-12 bg-purple-200 rounded-full flex items-center justify-center">
-                  <span className="text-purple-700 font-bold">JW</span>
+                  <img 
+                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" 
+                    alt="Sarah Thompson" 
+                    className="h-12 w-12 rounded-full object-cover"
+                  />
                 </div>
                 <div>
-                  <h3 className="text-lg font-medium text-indigo-900">Jennifer Williams</h3>
-                  <p className="text-indigo-600">Operations Director, Metro Express</p>
+                  <h3 className="text-lg font-medium text-indigo-900">Sarah Thompson</h3>
+                  <p className="text-indigo-600">Delivery Driver</p>
                 </div>
               </div>
               <p className="text-indigo-700">
-                "The driver safety features have completely transformed our safety culture. In just six months, we've seen a 40% reduction in safety incidents."
+                "The safety features actually make me feel valued. I get helpful tips rather than criticism, and I've personally seen my driving improve. My stress levels are way down since we started using Vayo."
               </p>
             </div>
 
@@ -322,15 +342,19 @@ export default function SolutionsPage() {
             <div className="bg-white rounded-lg shadow-xl p-8 transform transition duration-500 hover:scale-105">
               <div className="flex items-center mb-6">
                 <div className="mr-4 flex-shrink-0 h-12 w-12 bg-indigo-200 rounded-full flex items-center justify-center">
-                  <span className="text-indigo-700 font-bold">MR</span>
+                  <img 
+                    src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" 
+                    alt="Marcus Chen" 
+                    className="h-12 w-12 rounded-full object-cover"
+                  />
                 </div>
                 <div>
-                  <h3 className="text-lg font-medium text-indigo-900">Mark Rodriguez</h3>
-                  <p className="text-indigo-600">CEO, FastTrack Delivery</p>
+                  <h3 className="text-lg font-medium text-indigo-900">Marcus Chen</h3>
+                  <p className="text-indigo-600">Fleet Dispatcher</p>
                 </div>
               </div>
               <p className="text-indigo-700">
-                "The analytics tools have given us unprecedented visibility into our operations. We're now making data-driven decisions that have improved our bottom line."
+                "As a dispatcher, Vayo has revolutionized how I coordinate our fleet. I can see everything in real-time, communicate directly with drivers, and quickly adapt to changing conditions. It's made our entire team more efficient."
               </p>
             </div>
           </div>

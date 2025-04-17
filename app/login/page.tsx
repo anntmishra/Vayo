@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useState, FormEvent, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import { loginUser } from '../lib/auth';
 
 interface FormData {
   email: string;
@@ -40,30 +41,15 @@ export default function Login() {
     if (validateForm()) {
       setIsLoading(true);
       try {
-        const response = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: formData.email.trim().toLowerCase(),
-            password: formData.password,
-            rememberMe: formData.rememberMe
-          }),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error || 'Invalid credentials');
-        }
-
+        // Use the local storage auth instead of API
+        loginUser(formData.email.trim().toLowerCase(), formData.password);
+        
         // Login successful - redirect to dashboard
         router.push('/dashboard');
       } catch (error) {
         setErrors(prev => ({
           ...prev,
-          submit: error instanceof Error ? error.message : 'Failed to sign in'
+          submit: error instanceof Error ? error.message : 'Invalid email or password'
         }));
       } finally {
         setIsLoading(false);

@@ -74,8 +74,9 @@ export default function Reports() {
     );
     
     // Generate driver scores
+    const indianNames = ['Vikram Singh', 'Priya Mehta', 'Rahul Kumar', 'Ananya Patel', 'Raj Sharma', 'Neha Verma', 'Arjun Reddy', 'Deepika Gupta', 'Suresh Iyer', 'Meena Kapoor'];
     const driverScores = Array.from({ length: Math.min(10, truckCount) }, (_, i) => ({
-      name: `Driver ${i + 1}`,
+      name: indianNames[i],
       score: 60 + Math.floor(Math.random() * 40)
     })).sort((a, b) => b.score - a.score);
     
