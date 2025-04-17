@@ -5,11 +5,12 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "prebuild": "node temp_scripts/fix-swc.js",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "node temp_scripts/fix-platform.js"
   },
   "dependencies": {
-    "@next/swc-darwin-arm64": "^15.3.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/mongoose": "^5.11.96",
     "bcryptjs": "^3.0.2",
@@ -29,5 +30,8 @@
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
