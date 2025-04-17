@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import bcrypt from 'bcryptjs';
 import * as jose from 'jose';
-import connectDB from '@/app/lib/mongodb';
 import { User } from '@/app/models/User';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
@@ -20,9 +19,6 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-
-    // Connect to database
-    await connectDB();
 
     // Find user by email
     const user = await User.findOne({ email: email.toLowerCase() });

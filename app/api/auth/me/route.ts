@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as jose from 'jose';
-import connectDB from '@/app/lib/mongodb';
 import { User } from '@/app/models/User';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+
+interface JWTPayload {
+  userId: string;
+  email: string;
+  role: string;
+  [key: string]: unknown;
+}
 
 export async function GET(req: NextRequest) {
   try {
@@ -21,12 +27,12 @@ export async function GET(req: NextRequest) {
       // Verify the token
       const secretKey = new TextEncoder().encode(JWT_SECRET);
       const { payload } = await jose.jwtVerify(sessionToken, secretKey);
-
-      // Connect to database
-      await connectDB();
+      
+      // Type assert the payload
+      const userPayload = payload as unknown as JWTPayload;
 
       // Find user by ID
-      const user = await User.findById(payload.userId);
+      const user = await User.findById(userPayload.userId);
       if (!user) {
         return NextResponse.json(
           { error: 'User not found' },

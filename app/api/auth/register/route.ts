@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import connectDB from '@/app/lib/mongodb';
 import { User } from '@/app/models/User';
 
 export async function POST(req: Request) {
@@ -13,7 +12,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { company, email, password, phone, truckCount } = body;
+    const { company, email, password, phone, truckCount, role = 'owner' } = body;
 
     // Validate required fields
     if (!company || !email || !password || !phone || !truckCount) {
@@ -22,9 +21,6 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-
-    // Connect to database
-    await connectDB();
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -45,7 +41,8 @@ export async function POST(req: Request) {
       password: hashedPassword,
       phone,
       truckCount: parseInt(truckCount),
-      isPremium: parseInt(truckCount) > 5
+      isPremium: parseInt(truckCount) > 5,
+      role: role as 'owner' | 'driver'
     });
 
     // Return success response without sensitive data
