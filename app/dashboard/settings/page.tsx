@@ -72,6 +72,13 @@ export default function Settings() {
 
   const handleAccountSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // For demo user, show special message
+    if (user && user.id === 'demo123') {
+      alert('This is a demo account. Account details cannot be changed in demo mode.');
+      return;
+    }
+    
     // Simulate API call
     setTimeout(() => {
       alert('Account details updated successfully');
@@ -80,6 +87,13 @@ export default function Settings() {
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // For demo user, show special message
+    if (user && user.id === 'demo123') {
+      alert('This is a demo account. Password cannot be changed in demo mode.');
+      return;
+    }
+    
     if (newPassword !== confirmPassword) {
       alert('New passwords do not match');
       return;
@@ -95,6 +109,13 @@ export default function Settings() {
 
   const handleNotificationSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // For demo user, show special message but simulate success
+    if (user && user.id === 'demo123') {
+      alert('Demo Mode: Notification preferences have been updated (simulated)');
+      return;
+    }
+    
     // Simulate API call
     setTimeout(() => {
       alert('Notification preferences updated successfully');
@@ -103,6 +124,13 @@ export default function Settings() {
 
   const handleAppSettingsSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // For demo user, show special message but simulate success
+    if (user && user.id === 'demo123') {
+      alert('Demo Mode: Application settings have been updated (simulated)');
+      return;
+    }
+    
     // Simulate API call
     setTimeout(() => {
       alert('Application settings updated successfully');
@@ -124,8 +152,8 @@ export default function Settings() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-secondary">Loading settings...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+          <p className="text-indigo-700">Loading settings...</p>
         </div>
       </div>
     );
@@ -136,25 +164,25 @@ export default function Settings() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-muted/30">
+    <div className="min-h-screen flex flex-col bg-indigo-50/30">
       {/* Navigation */}
-      <header className="py-4 border-b border-border sticky top-0 bg-white z-10">
+      <header className="py-4 border-b border-indigo-100 sticky top-0 bg-white z-10">
         <div className="container-custom flex justify-between items-center">
           <div className="flex items-center">
-            <h1 className="text-2xl font-bold text-primary">Vayo</h1>
+            <h1 className="text-2xl font-bold text-indigo-600">Vayo</h1>
           </div>
           <nav className="hidden md:flex gap-8">
-            <Link href="/dashboard" className="text-secondary hover:text-primary transition-colors">Dashboard</Link>
-            <Link href="/dashboard/fleet" className="text-secondary hover:text-primary transition-colors">Fleet</Link>
-            <Link href="/dashboard/reports" className="text-secondary hover:text-primary transition-colors">Reports</Link>
-            <Link href="/dashboard/settings" className="text-primary font-medium">Settings</Link>
+            <Link href="/dashboard" className="text-indigo-900 hover:text-indigo-600 transition-colors">Dashboard</Link>
+            <Link href="/dashboard/fleet" className="text-indigo-900 hover:text-indigo-600 transition-colors">Fleet</Link>
+            <Link href="/dashboard/reports" className="text-indigo-900 hover:text-indigo-600 transition-colors">Reports</Link>
+            <Link href="/dashboard/settings" className="text-indigo-600 font-medium">Settings</Link>
           </nav>
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <p className="text-sm text-secondary">{user.company}</p>
-              <p className="text-xs text-muted-foreground">{user.email}</p>
+              <p className="text-sm text-indigo-900">{user.company}</p>
+              <p className="text-xs text-indigo-500">{user.email}</p>
             </div>
-            <div className="h-10 w-10 rounded-full bg-primary text-white flex items-center justify-center font-medium">
+            <div className="h-10 w-10 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white flex items-center justify-center font-medium">
               {user.email.charAt(0).toUpperCase()}
             </div>
           </div>
@@ -164,22 +192,22 @@ export default function Settings() {
       <main className="py-8 flex-grow">
         <div className="container-custom">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-            <h1 className="text-3xl font-bold">Settings</h1>
+            <h1 className="text-3xl font-bold text-indigo-900">Settings</h1>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {/* Sidebar */}
             <div className="md:col-span-1">
-              <div className="bg-white rounded-xl shadow-sm border border-border overflow-hidden">
+              <div className="bg-white rounded-xl shadow-sm border border-indigo-100 overflow-hidden">
                 <div className="p-6">
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="h-16 w-16 rounded-full bg-primary text-white flex items-center justify-center text-2xl font-medium">
+                    <div className="h-16 w-16 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white flex items-center justify-center text-2xl font-medium">
                       {user.email.charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <h2 className="font-semibold">{user.company}</h2>
-                      <p className="text-sm text-muted-foreground">{user.email}</p>
-                      <p className="text-xs text-muted-foreground mt-1 capitalize">{user.role}</p>
+                      <h2 className="font-semibold text-indigo-900">{user.company}</h2>
+                      <p className="text-sm text-indigo-500">{user.email}</p>
+                      <p className="text-xs text-indigo-400 mt-1 capitalize">{user.role}</p>
                     </div>
                   </div>
                   
@@ -187,7 +215,7 @@ export default function Settings() {
                     <button 
                       onClick={() => setActiveTab('account')} 
                       className={`flex items-center gap-3 w-full p-3 rounded-lg text-left ${
-                        activeTab === 'account' ? 'bg-primary/10 text-primary font-medium' : 'hover:bg-muted/50'
+                        activeTab === 'account' ? 'bg-indigo-100 text-indigo-600 font-medium' : 'hover:bg-indigo-50 text-indigo-900'
                       }`}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -198,7 +226,7 @@ export default function Settings() {
                     <button 
                       onClick={() => setActiveTab('password')} 
                       className={`flex items-center gap-3 w-full p-3 rounded-lg text-left ${
-                        activeTab === 'password' ? 'bg-primary/10 text-primary font-medium' : 'hover:bg-muted/50'
+                        activeTab === 'password' ? 'bg-indigo-100 text-indigo-600 font-medium' : 'hover:bg-indigo-50 text-indigo-900'
                       }`}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -209,7 +237,7 @@ export default function Settings() {
                     <button 
                       onClick={() => setActiveTab('notifications')} 
                       className={`flex items-center gap-3 w-full p-3 rounded-lg text-left ${
-                        activeTab === 'notifications' ? 'bg-primary/10 text-primary font-medium' : 'hover:bg-muted/50'
+                        activeTab === 'notifications' ? 'bg-indigo-100 text-indigo-600 font-medium' : 'hover:bg-indigo-50 text-indigo-900'
                       }`}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -220,7 +248,7 @@ export default function Settings() {
                     <button 
                       onClick={() => setActiveTab('app')} 
                       className={`flex items-center gap-3 w-full p-3 rounded-lg text-left ${
-                        activeTab === 'app' ? 'bg-primary/10 text-primary font-medium' : 'hover:bg-muted/50'
+                        activeTab === 'app' ? 'bg-indigo-100 text-indigo-600 font-medium' : 'hover:bg-indigo-50 text-indigo-900'
                       }`}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -231,7 +259,7 @@ export default function Settings() {
                     </button>
                   </nav>
                   
-                  <div className="mt-8 pt-6 border-t border-border">
+                  <div className="mt-8 pt-6 border-t border-indigo-100">
                     <button 
                       onClick={handleLogout}
                       className="flex items-center gap-3 w-full p-3 rounded-lg text-left text-red-600 hover:bg-red-50"
@@ -248,262 +276,249 @@ export default function Settings() {
 
             {/* Main Content */}
             <div className="md:col-span-3">
-              <div className="bg-white rounded-xl shadow-sm border border-border">
-                <div className="p-6">
-                  {/* Account Settings Form */}
-                  {activeTab === 'account' && (
-                    <>
-                      <h2 className="text-xl font-semibold mb-6">Account Information</h2>
-                      <form onSubmit={handleAccountSubmit} className="space-y-4">
-                        <div>
-                          <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">
-                            Company Name
-                          </label>
-                          <input
-                            type="text"
-                            id="company"
-                            value={companyName}
-                            onChange={(e) => setCompanyName(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                            required
-                          />
-                        </div>
-                        
-                        <div>
-                          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                            Email Address
-                          </label>
-                          <input
-                            type="email"
-                            id="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                            required
-                          />
-                        </div>
-                        
-                        <div>
-                          <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                            Phone Number
-                          </label>
-                          <input
-                            type="tel"
-                            id="phone"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                          />
-                        </div>
-                        
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Subscription
-                          </label>
-                          <div className="bg-muted/30 p-4 rounded-lg">
-                            <div className="flex justify-between items-center">
-                              <div>
-                                <p className="font-medium">{user.isPremium ? 'Premium Plan' : 'Standard Plan'}</p>
-                                <p className="text-sm text-muted-foreground">{user.truckCount} vehicles</p>
-                              </div>
-                              <button type="button" className="btn-outline text-sm">
-                                {user.isPremium ? 'Manage Plan' : 'Upgrade'}
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div className="pt-4">
-                          <button type="submit" className="btn-primary">
-                            Save Changes
-                          </button>
-                        </div>
-                      </form>
-                    </>
-                  )}
-
-                  {/* Password Form */}
-                  {activeTab === 'password' && (
-                    <>
-                      <h2 className="text-xl font-semibold mb-6">Change Password</h2>
-                      <form onSubmit={handlePasswordSubmit} className="space-y-4">
-                        <div>
-                          <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                            Current Password
-                          </label>
-                          <input
-                            type="password"
-                            id="currentPassword"
-                            value={currentPassword}
-                            onChange={(e) => setCurrentPassword(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                            required
-                          />
-                        </div>
-                        
-                        <div>
-                          <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                            New Password
-                          </label>
-                          <input
-                            type="password"
-                            id="newPassword"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                            required
-                          />
-                        </div>
-                        
-                        <div>
-                          <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                            Confirm New Password
-                          </label>
-                          <input
-                            type="password"
-                            id="confirmPassword"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                            required
-                          />
-                        </div>
-                        
-                        <div className="pt-4">
-                          <button type="submit" className="btn-primary">
-                            Update Password
-                          </button>
-                        </div>
-                      </form>
-                    </>
-                  )}
-
-                  {/* Notification Settings */}
-                  {activeTab === 'notifications' && (
-                    <>
-                      <h2 className="text-xl font-semibold mb-6">Notification Preferences</h2>
-                      <form onSubmit={handleNotificationSubmit} className="space-y-4">
-                        <div>
-                          <p className="text-sm font-medium text-gray-700 mb-3">Email Notifications</p>
-                          
-                          <div className="space-y-3">
-                            {[
-                              { id: 'dailyReports', label: 'Daily Activity Reports' },
-                              { id: 'alerts', label: 'Real-time Vehicle Alerts' },
-                              { id: 'maintenanceReminders', label: 'Maintenance Reminders' },
-                              { id: 'newsUpdates', label: 'News and Feature Updates' }
-                            ].map((item) => (
-                              <div key={item.id} className="flex items-center">
-                                <input
-                                  type="checkbox"
-                                  id={item.id}
-                                  checked={emailNotifications[item.id as keyof typeof emailNotifications]}
-                                  onChange={(e) => setEmailNotifications({
-                                    ...emailNotifications,
-                                    [item.id]: e.target.checked
-                                  })}
-                                  className="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
-                                />
-                                <label htmlFor={item.id} className="ml-2 block text-sm text-gray-700">
-                                  {item.label}
-                                </label>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                        
-                        <div className="pt-4">
-                          <button type="submit" className="btn-primary">
-                            Save Preferences
-                          </button>
-                        </div>
-                      </form>
-                    </>
-                  )}
-
-                  {/* App Settings */}
-                  {activeTab === 'app' && (
-                    <>
-                      <h2 className="text-xl font-semibold mb-6">Application Settings</h2>
-                      <form onSubmit={handleAppSettingsSubmit} className="space-y-4">
-                        <div>
-                          <label htmlFor="theme" className="block text-sm font-medium text-gray-700 mb-1">
-                            Theme
-                          </label>
-                          <select
-                            id="theme"
-                            value={theme}
-                            onChange={(e) => setTheme(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                          >
-                            <option value="light">Light</option>
-                            <option value="dark">Dark</option>
-                            <option value="system">System</option>
-                          </select>
-                        </div>
-                        
-                        <div>
-                          <label htmlFor="language" className="block text-sm font-medium text-gray-700 mb-1">
-                            Language
-                          </label>
-                          <select
-                            id="language"
-                            value={language}
-                            onChange={(e) => setLanguage(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                          >
-                            <option value="en">English</option>
-                            <option value="es">Spanish</option>
-                            <option value="fr">French</option>
-                            <option value="de">German</option>
-                          </select>
-                        </div>
-                        
-                        <div>
-                          <label htmlFor="unitSystem" className="block text-sm font-medium text-gray-700 mb-1">
-                            Unit System
-                          </label>
-                          <select
-                            id="unitSystem"
-                            value={unitSystem}
-                            onChange={(e) => setUnitSystem(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                          >
-                            <option value="metric">Metric (km, L)</option>
-                            <option value="imperial">Imperial (mi, gal)</option>
-                          </select>
-                        </div>
-                        
-                        <div>
-                          <label htmlFor="timezone" className="block text-sm font-medium text-gray-700 mb-1">
-                            Timezone
-                          </label>
-                          <select
-                            id="timezone"
-                            value={timezone}
-                            onChange={(e) => setTimezone(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                          >
-                            <option value="UTC">UTC</option>
-                            <option value="America/New_York">Eastern Time (ET)</option>
-                            <option value="America/Chicago">Central Time (CT)</option>
-                            <option value="America/Denver">Mountain Time (MT)</option>
-                            <option value="America/Los_Angeles">Pacific Time (PT)</option>
-                            <option value="Europe/London">London (GMT)</option>
-                            <option value="Europe/Paris">Paris (CET)</option>
-                          </select>
-                        </div>
-                        
-                        <div className="pt-4">
-                          <button type="submit" className="btn-primary">
-                            Save Settings
-                          </button>
-                        </div>
-                      </form>
-                    </>
-                  )}
+              {/* Account Settings */}
+              {activeTab === 'account' && (
+                <div className="bg-white rounded-xl shadow-sm border border-indigo-100 p-6">
+                  <h2 className="text-xl font-semibold mb-6 text-indigo-900">Account Settings</h2>
+                  <form onSubmit={handleAccountSubmit} className="space-y-6">
+                    <div>
+                      <label htmlFor="companyName" className="block text-sm font-medium text-indigo-700 mb-1">
+                        Company Name
+                      </label>
+                      <input
+                        type="text"
+                        id="companyName"
+                        value={companyName}
+                        onChange={(e) => setCompanyName(e.target.value)}
+                        className="w-full px-4 py-2 border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-medium text-indigo-700 mb-1">
+                        Email Address
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full px-4 py-2 border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="phone" className="block text-sm font-medium text-indigo-700 mb-1">
+                        Phone Number
+                      </label>
+                      <input
+                        type="tel"
+                        id="phone"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="w-full px-4 py-2 border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600"
+                        placeholder="+1 (555) 123-4567"
+                      />
+                    </div>
+                    
+                    <div className="flex justify-end">
+                      <button
+                        type="submit"
+                        className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all"
+                      >
+                        Save Changes
+                      </button>
+                    </div>
+                  </form>
                 </div>
-              </div>
+              )}
+              
+              {/* Password Settings */}
+              {activeTab === 'password' && (
+                <div className="bg-white rounded-xl shadow-sm border border-indigo-100 p-6">
+                  <h2 className="text-xl font-semibold mb-6 text-indigo-900">Change Password</h2>
+                  <form onSubmit={handlePasswordSubmit} className="space-y-6">
+                    <div>
+                      <label htmlFor="currentPassword" className="block text-sm font-medium text-indigo-700 mb-1">
+                        Current Password
+                      </label>
+                      <input
+                        type="password"
+                        id="currentPassword"
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}
+                        className="w-full px-4 py-2 border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="newPassword" className="block text-sm font-medium text-indigo-700 mb-1">
+                        New Password
+                      </label>
+                      <input
+                        type="password"
+                        id="newPassword"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        className="w-full px-4 py-2 border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="confirmPassword" className="block text-sm font-medium text-indigo-700 mb-1">
+                        Confirm New Password
+                      </label>
+                      <input
+                        type="password"
+                        id="confirmPassword"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className="w-full px-4 py-2 border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600"
+                      />
+                    </div>
+                    
+                    <div className="flex justify-end">
+                      <button
+                        type="submit"
+                        className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all"
+                      >
+                        Update Password
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              )}
+
+              {/* Notification Settings */}
+              {activeTab === 'notifications' && (
+                <div className="bg-white rounded-xl shadow-sm border border-indigo-100 p-6">
+                  <h2 className="text-xl font-semibold mb-6 text-indigo-900">Notification Preferences</h2>
+                  <form onSubmit={handleNotificationSubmit} className="space-y-6">
+                    <div>
+                      <p className="text-sm font-medium text-indigo-700 mb-3">Email Notifications</p>
+                      
+                      <div className="space-y-3">
+                        {[
+                          { id: 'dailyReports', label: 'Daily Activity Reports' },
+                          { id: 'alerts', label: 'Real-time Vehicle Alerts' },
+                          { id: 'maintenanceReminders', label: 'Maintenance Reminders' },
+                          { id: 'newsUpdates', label: 'News and Feature Updates' }
+                        ].map((item) => (
+                          <div key={item.id} className="flex items-center">
+                            <input
+                              type="checkbox"
+                              id={item.id}
+                              checked={emailNotifications[item.id as keyof typeof emailNotifications]}
+                              onChange={(e) => setEmailNotifications({
+                                ...emailNotifications,
+                                [item.id]: e.target.checked
+                              })}
+                              className="h-4 w-4 text-indigo-300 border-indigo-300 rounded focus:ring-indigo-600"
+                            />
+                            <label htmlFor={item.id} className="ml-2 block text-sm text-indigo-700">
+                              {item.label}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-end">
+                      <button
+                        type="submit"
+                        className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all"
+                      >
+                        Save Preferences
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              )}
+
+              {/* App Settings */}
+              {activeTab === 'app' && (
+                <div className="bg-white rounded-xl shadow-sm border border-indigo-100 p-6">
+                  <h2 className="text-xl font-semibold mb-6 text-indigo-900">Application Settings</h2>
+                  <form onSubmit={handleAppSettingsSubmit} className="space-y-6">
+                    <div>
+                      <label htmlFor="theme" className="block text-sm font-medium text-indigo-700 mb-1">
+                        Theme
+                      </label>
+                      <select
+                        id="theme"
+                        value={theme}
+                        onChange={(e) => setTheme(e.target.value)}
+                        className="w-full px-4 py-2 border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600"
+                      >
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                        <option value="system">System</option>
+                      </select>
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="language" className="block text-sm font-medium text-indigo-700 mb-1">
+                        Language
+                      </label>
+                      <select
+                        id="language"
+                        value={language}
+                        onChange={(e) => setLanguage(e.target.value)}
+                        className="w-full px-4 py-2 border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600"
+                      >
+                        <option value="en">English</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                      </select>
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="unitSystem" className="block text-sm font-medium text-indigo-700 mb-1">
+                        Unit System
+                      </label>
+                      <select
+                        id="unitSystem"
+                        value={unitSystem}
+                        onChange={(e) => setUnitSystem(e.target.value)}
+                        className="w-full px-4 py-2 border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600"
+                      >
+                        <option value="metric">Metric (km, L)</option>
+                        <option value="imperial">Imperial (mi, gal)</option>
+                      </select>
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="timezone" className="block text-sm font-medium text-indigo-700 mb-1">
+                        Timezone
+                      </label>
+                      <select
+                        id="timezone"
+                        value={timezone}
+                        onChange={(e) => setTimezone(e.target.value)}
+                        className="w-full px-4 py-2 border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600"
+                      >
+                        <option value="UTC">UTC</option>
+                        <option value="America/New_York">Eastern Time (ET)</option>
+                        <option value="America/Chicago">Central Time (CT)</option>
+                        <option value="America/Denver">Mountain Time (MT)</option>
+                        <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                        <option value="Europe/London">London (GMT)</option>
+                        <option value="Europe/Paris">Paris (CET)</option>
+                      </select>
+                    </div>
+                    
+                    <div className="flex justify-end">
+                      <button
+                        type="submit"
+                        className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all"
+                      >
+                        Save Settings
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              )}
             </div>
           </div>
         </div>

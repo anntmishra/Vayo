@@ -24,6 +24,18 @@ const users: UserType[] = [
     isPremium: true,
     createdAt: new Date(),
     role: 'owner'
+  },
+  {
+    _id: 'demo123',
+    company: 'Demo Transport LLC',
+    email: 'demo@vayo.com',
+    // hashed version of 'demo1234'
+    password: '$2a$10$hLXt4AvjfJw1kVOqRMfUu.bX4KOVXxq0CYwEUJ8AcHSGk.evDn5IS',
+    phone: '555-123-4567',
+    truckCount: 5,
+    isPremium: true,
+    createdAt: new Date(),
+    role: 'owner'
   }
 ];
 

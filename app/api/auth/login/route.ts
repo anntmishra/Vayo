@@ -20,6 +20,50 @@ export async function POST(req: Request) {
       );
     }
 
+    // Special case for demo account
+    if (email === 'demo@vayo.com' && password === 'demo1234') {
+      // Create demo user data - no need to check database
+      const demoUser = {
+        _id: 'demo123',
+        company: 'Demo Transport LLC',
+        email: 'demo@vayo.com',
+        role: 'owner',
+        truckCount: 5,
+        isPremium: true
+      };
+
+      // Create session token using jose
+      const secret = new TextEncoder().encode(JWT_SECRET);
+      const token = await new jose.SignJWT({
+        userId: demoUser._id,
+        email: demoUser.email,
+        role: demoUser.role
+      })
+        .setProtectedHeader({ alg: 'HS256' })
+        .setExpirationTime(rememberMe ? `${SESSION_DURATION}s` : `${SHORT_SESSION}s`)
+        .sign(secret);
+
+      // Set cookie options
+      const cookieOptions = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax' as const,
+        maxAge: rememberMe ? SESSION_DURATION : SHORT_SESSION,
+        path: '/'
+      };
+
+      // Create response with cookie
+      const response = NextResponse.json({
+        message: 'Login successful',
+        user: demoUser
+      });
+
+      // Set the session cookie
+      response.cookies.set('session_token', token, cookieOptions);
+
+      return response;
+    }
+
     // Find user by email
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {

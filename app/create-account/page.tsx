@@ -111,18 +111,18 @@ export default function CreateAccount() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
       <div className="container-custom py-16">
         <div className="max-w-md mx-auto">
-          <Link href="/get-started" className="text-primary hover:text-primary-dark inline-flex items-center mb-6">
+          <Link href="/get-started" className="text-indigo-600 hover:text-indigo-800 inline-flex items-center mb-6">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 mr-2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
             </svg>
             Back to Get Started
           </Link>
 
-          <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">Create Your Account</h1>
+          <div className="bg-white p-8 rounded-xl shadow-sm border border-indigo-100">
+            <h1 className="text-2xl font-bold text-indigo-900 mb-6">Create Your Account</h1>
             
             {errors.submit && (
               <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">
@@ -132,7 +132,7 @@ export default function CreateAccount() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="company" className="block text-sm font-medium text-indigo-700 mb-1">
                   Company Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -141,8 +141,8 @@ export default function CreateAccount() {
                   name="company"
                   value={formData.company}
                   onChange={handleChange}
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary ${
-                    errors.company ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 ${
+                    errors.company ? 'border-red-500' : 'border-indigo-200'
                   }`}
                   placeholder="Enter your company name"
                   disabled={isLoading}
@@ -151,7 +151,7 @@ export default function CreateAccount() {
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="email" className="block text-sm font-medium text-indigo-700 mb-1">
                   Email Address <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -160,8 +160,8 @@ export default function CreateAccount() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary ${
-                    errors.email ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 ${
+                    errors.email ? 'border-red-500' : 'border-indigo-200'
                   }`}
                   placeholder="Enter your email"
                   disabled={isLoading}
@@ -170,7 +170,7 @@ export default function CreateAccount() {
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="password" className="block text-sm font-medium text-indigo-700 mb-1">
                   Password <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -179,8 +179,8 @@ export default function CreateAccount() {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary ${
-                    errors.password ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 ${
+                    errors.password ? 'border-red-500' : 'border-indigo-200'
                   }`}
                   placeholder="Create a password"
                   disabled={isLoading}
@@ -189,7 +189,7 @@ export default function CreateAccount() {
               </div>
 
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="phone" className="block text-sm font-medium text-indigo-700 mb-1">
                   Phone Number <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -198,8 +198,8 @@ export default function CreateAccount() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary ${
-                    errors.phone ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 ${
+                    errors.phone ? 'border-red-500' : 'border-indigo-200'
                   }`}
                   placeholder="Enter your phone number"
                   disabled={isLoading}
@@ -208,7 +208,7 @@ export default function CreateAccount() {
               </div>
 
               <div>
-                <label htmlFor="truckCount" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="truckCount" className="block text-sm font-medium text-indigo-700 mb-1">
                   Number of Trucks <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -218,29 +218,36 @@ export default function CreateAccount() {
                   value={formData.truckCount}
                   onChange={handleChange}
                   min="0"
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary ${
-                    errors.truckCount ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 ${
+                    errors.truckCount ? 'border-red-500' : 'border-indigo-200'
                   }`}
                   placeholder="Enter number of trucks"
                   disabled={isLoading}
                 />
                 {errors.truckCount && <p className="text-red-500 text-sm mt-1">{errors.truckCount}</p>}
-                <p className="text-sm text-gray-500 mt-1">Free for up to 5 trucks</p>
+                <p className="text-sm text-indigo-500 mt-1">Free for up to 5 trucks</p>
               </div>
 
               <button 
                 type="submit"
-                className={`w-full btn-primary text-center mt-6 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-all mt-6 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                 disabled={isLoading}
               >
                 {isLoading ? 'Creating Account...' : 'Create Account & Continue'}
               </button>
             </form>
 
-            <p className="mt-4 text-sm text-center text-gray-600">
+            <p className="mt-6 pt-6 border-t border-indigo-100 text-sm text-center text-indigo-700">
               Already have an account?{' '}
-              <Link href="/login" className="text-primary hover:text-primary-dark">
+              <Link href="/login" className="text-indigo-600 hover:text-indigo-800 font-medium">
                 Sign in
+              </Link>
+            </p>
+            
+            <p className="mt-3 text-sm text-center text-indigo-700">
+              Want to see how it works first?{' '}
+              <Link href="/demo" className="text-purple-600 hover:text-purple-800 font-medium">
+                Try our demo
               </Link>
             </p>
           </div>

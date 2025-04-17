@@ -226,8 +226,8 @@ export default function Reports() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-secondary">Loading reports...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+          <p className="text-indigo-700">Loading reports...</p>
         </div>
       </div>
     );
@@ -238,25 +238,25 @@ export default function Reports() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-muted/30">
+    <div className="min-h-screen flex flex-col bg-indigo-50/30">
       {/* Navigation */}
-      <header className="py-4 border-b border-border sticky top-0 bg-white z-10">
+      <header className="py-4 border-b border-indigo-100 sticky top-0 bg-white z-10">
         <div className="container-custom flex justify-between items-center">
           <div className="flex items-center">
-            <h1 className="text-2xl font-bold text-primary">Vayo</h1>
+            <h1 className="text-2xl font-bold text-indigo-600">Vayo</h1>
           </div>
           <nav className="hidden md:flex gap-8">
-            <Link href="/dashboard" className="text-secondary hover:text-primary transition-colors">Dashboard</Link>
-            <Link href="/dashboard/fleet" className="text-secondary hover:text-primary transition-colors">Fleet</Link>
-            <Link href="/dashboard/reports" className="text-primary font-medium">Reports</Link>
-            <Link href="/dashboard/settings" className="text-secondary hover:text-primary transition-colors">Settings</Link>
+            <Link href="/dashboard" className="text-indigo-900 hover:text-indigo-600 transition-colors">Dashboard</Link>
+            <Link href="/dashboard/fleet" className="text-indigo-900 hover:text-indigo-600 transition-colors">Fleet</Link>
+            <Link href="/dashboard/reports" className="text-indigo-600 font-medium">Reports</Link>
+            <Link href="/dashboard/settings" className="text-indigo-900 hover:text-indigo-600 transition-colors">Settings</Link>
           </nav>
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <p className="text-sm text-secondary">{user.company}</p>
-              <p className="text-xs text-muted-foreground">{user.email}</p>
+              <p className="text-sm text-indigo-900">{user.company}</p>
+              <p className="text-xs text-indigo-500">{user.email}</p>
             </div>
-            <div className="h-10 w-10 rounded-full bg-primary text-white flex items-center justify-center font-medium">
+            <div className="h-10 w-10 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white flex items-center justify-center font-medium">
               {user.email.charAt(0).toUpperCase()}
             </div>
           </div>
@@ -266,126 +266,160 @@ export default function Reports() {
       <main className="py-8 flex-grow">
         <div className="container-custom">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-            <h1 className="text-3xl font-bold">Performance Reports</h1>
-            <div className="flex bg-white border border-border rounded-lg overflow-hidden">
-              <button 
-                className={`px-4 py-2 text-sm font-medium ${reportTimeframe === 'week' ? 'bg-primary text-white' : 'hover:bg-gray-50'}`}
+            <h1 className="text-3xl font-bold text-indigo-900">Reports & Analytics</h1>
+            
+            <div className="inline-flex rounded-md shadow-sm">
+              <button
                 onClick={() => setReportTimeframe('week')}
+                className={`px-4 py-2 text-sm font-medium rounded-l-lg ${
+                  reportTimeframe === 'week' 
+                    ? 'bg-indigo-600 text-white' 
+                    : 'bg-white text-indigo-700 hover:bg-indigo-50'
+                } border border-indigo-200`}
               >
-                Week
+                Weekly
               </button>
-              <button 
-                className={`px-4 py-2 text-sm font-medium ${reportTimeframe === 'month' ? 'bg-primary text-white' : 'hover:bg-gray-50'}`}
+              <button
                 onClick={() => setReportTimeframe('month')}
+                className={`px-4 py-2 text-sm font-medium ${
+                  reportTimeframe === 'month' 
+                    ? 'bg-indigo-600 text-white' 
+                    : 'bg-white text-indigo-700 hover:bg-indigo-50'
+                } border-t border-b border-indigo-200`}
               >
-                Month
+                Monthly
               </button>
-              <button 
-                className={`px-4 py-2 text-sm font-medium ${reportTimeframe === 'quarter' ? 'bg-primary text-white' : 'hover:bg-gray-50'}`}
+              <button
                 onClick={() => setReportTimeframe('quarter')}
+                className={`px-4 py-2 text-sm font-medium rounded-r-lg ${
+                  reportTimeframe === 'quarter' 
+                    ? 'bg-indigo-600 text-white' 
+                    : 'bg-white text-indigo-700 hover:bg-indigo-50'
+                } border border-indigo-200`}
               >
-                Quarter
+                Quarterly
               </button>
             </div>
           </div>
-
-          {/* KPI Summary */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            {[
-              { 
-                title: 'Total Distance', 
-                value: `${Math.round(reportData.dailyDistance.reduce((sum, val) => sum + val, 0))} km`,
-                icon: (
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" />
-                  </svg>
-                ),
-                color: 'bg-blue-100 text-blue-600'
-              },
-              { 
-                title: 'Fuel Used', 
-                value: `${Math.round(reportData.fuelConsumption.reduce((sum, val) => sum + val, 0))} L`,
-                icon: (
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
-                  </svg>
-                ),
-                color: 'bg-green-100 text-green-600'
-              },
-              { 
-                title: 'Total Cost', 
-                value: formatCurrency(reportData.costBreakdown.reduce((sum, item) => sum + item.value, 0)),
-                icon: (
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
-                  </svg>
-                ),
-                color: 'bg-amber-100 text-amber-600'
-              },
-              { 
-                title: 'CO2 Emissions', 
-                value: `${Math.round(reportData.emissions.reduce((sum, val) => sum + val, 0) / 1000)} tons`,
-                icon: (
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
-                  </svg>
-                ),
-                color: 'bg-red-100 text-red-600'
-              }
-            ].map((kpi, index) => (
-              <div key={index} className="bg-white rounded-xl shadow-sm border border-border p-6">
-                <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 rounded-full ${kpi.color} flex items-center justify-center`}>
-                    {kpi.icon}
+          
+          {/* Distance & Fuel Charts */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div className="bg-white rounded-xl shadow-sm border border-indigo-100 p-6">
+              {renderBarChart(reportData.dailyDistance, 'Daily Distance (km)', 'bg-indigo-500')}
+              <div className="mt-4 flex justify-between text-indigo-700">
+                <div>
+                  <span className="text-sm text-indigo-500">Avg. Distance:</span>
+                  <p className="font-medium">{Math.round(reportData.dailyDistance.reduce((a, b) => a + b, 0) / reportData.dailyDistance.length)} km</p>
+                </div>
+                <div>
+                  <span className="text-sm text-indigo-500">Total:</span>
+                  <p className="font-medium">{Math.round(reportData.dailyDistance.reduce((a, b) => a + b, 0))} km</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white rounded-xl shadow-sm border border-indigo-100 p-6">
+              {renderBarChart(reportData.fuelConsumption, 'Fuel Consumption (L)', 'bg-purple-500')}
+              <div className="mt-4 flex justify-between text-indigo-700">
+                <div>
+                  <span className="text-sm text-indigo-500">Avg. Fuel Usage:</span>
+                  <p className="font-medium">{Math.round(reportData.fuelConsumption.reduce((a, b) => a + b, 0) / reportData.fuelConsumption.length)} L</p>
+                </div>
+                <div>
+                  <span className="text-sm text-indigo-500">Total:</span>
+                  <p className="font-medium">{Math.round(reportData.fuelConsumption.reduce((a, b) => a + b, 0))} L</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Driver Scores & Cost Breakdown */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div className="bg-white rounded-xl shadow-sm border border-indigo-100 p-6">
+              <h2 className="text-lg font-semibold mb-4 text-indigo-900">Driver Safety Scores</h2>
+              {renderHorizontalBarChart(reportData.driverScores)}
+              <div className="mt-4 flex justify-between text-indigo-700">
+                <div>
+                  <span className="text-sm text-indigo-500">Avg. Score:</span>
+                  <p className="font-medium">{Math.round(reportData.driverScores.reduce((a, b) => a + b.score, 0) / reportData.driverScores.length)}</p>
+                </div>
+                <div>
+                  <span className="text-sm text-indigo-500">Top Driver:</span>
+                  <p className="font-medium">{reportData.driverScores[0].name}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white rounded-xl shadow-sm border border-indigo-100 p-6">
+              <h2 className="text-lg font-semibold mb-4 text-indigo-900">Cost Breakdown</h2>
+              {renderPieChart(reportData.costBreakdown)}
+              <div className="mt-4 text-center text-indigo-700">
+                <span className="text-sm text-indigo-500">Total Expenses:</span>
+                <p className="font-medium">{formatCurrency(reportData.costBreakdown.reduce((a, b) => a + b.value, 0))}</p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Emissions & Summary */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-2 bg-white rounded-xl shadow-sm border border-indigo-100 p-6">
+              {renderBarChart(reportData.emissions, 'CO2 Emissions (kg)', 'bg-green-500')}
+              <div className="mt-4 flex justify-between text-indigo-700">
+                <div>
+                  <span className="text-sm text-indigo-500">Avg. Emissions:</span>
+                  <p className="font-medium">{Math.round(reportData.emissions.reduce((a, b) => a + b, 0) / reportData.emissions.length)} kg</p>
+                </div>
+                <div>
+                  <span className="text-sm text-indigo-500">Total:</span>
+                  <p className="font-medium">{Math.round(reportData.emissions.reduce((a, b) => a + b, 0))} kg</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white rounded-xl shadow-sm border border-indigo-100 p-6">
+              <h2 className="text-lg font-semibold mb-4 text-indigo-900">Performance Summary</h2>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span className="text-sm text-indigo-500">Fuel Efficiency</span>
+                    <span className="text-sm font-medium text-indigo-700">Good</span>
                   </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">{kpi.title}</p>
-                    <p className="text-2xl font-semibold">{kpi.value}</p>
+                  <div className="w-full bg-indigo-200 rounded-full h-2.5">
+                    <div className="bg-indigo-600 h-2.5 rounded-full" style={{ width: '75%' }}></div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span className="text-sm text-indigo-500">Driver Safety</span>
+                    <span className="text-sm font-medium text-indigo-700">Excellent</span>
+                  </div>
+                  <div className="w-full bg-indigo-200 rounded-full h-2.5">
+                    <div className="bg-indigo-600 h-2.5 rounded-full" style={{ width: '90%' }}></div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span className="text-sm text-indigo-500">Vehicle Utilization</span>
+                    <span className="text-sm font-medium text-indigo-700">Average</span>
+                  </div>
+                  <div className="w-full bg-indigo-200 rounded-full h-2.5">
+                    <div className="bg-indigo-600 h-2.5 rounded-full" style={{ width: '65%' }}></div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span className="text-sm text-indigo-500">Cost Efficiency</span>
+                    <span className="text-sm font-medium text-indigo-700">Good</span>
+                  </div>
+                  <div className="w-full bg-indigo-200 rounded-full h-2.5">
+                    <div className="bg-indigo-600 h-2.5 rounded-full" style={{ width: '80%' }}></div>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-
-          {/* Charts */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-white rounded-xl shadow-sm border border-border p-6">
-              <h2 className="text-lg font-semibold mb-4">Daily Distance</h2>
-              {renderBarChart(reportData.dailyDistance, 'Kilometers', 'bg-blue-500')}
             </div>
-            
-            <div className="bg-white rounded-xl shadow-sm border border-border p-6">
-              <h2 className="text-lg font-semibold mb-4">Fuel Consumption</h2>
-              {renderBarChart(reportData.fuelConsumption, 'Liters', 'bg-green-500')}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-xl shadow-sm border border-border p-6">
-              <h2 className="text-lg font-semibold mb-4">Driver Performance Scores</h2>
-              {renderHorizontalBarChart(reportData.driverScores)}
-            </div>
-            
-            <div className="bg-white rounded-xl shadow-sm border border-border p-6">
-              <h2 className="text-lg font-semibold mb-4">Cost Breakdown</h2>
-              {renderPieChart(reportData.costBreakdown)}
-            </div>
-          </div>
-
-          {/* Export Buttons */}
-          <div className="flex justify-end mt-8 gap-4">
-            <button className="btn-outline flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 mr-2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-              </svg>
-              Export PDF
-            </button>
-            <button className="btn-outline flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 mr-2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
-              </svg>
-              Export CSV
-            </button>
           </div>
         </div>
       </main>

@@ -31,6 +31,20 @@ export async function GET(req: NextRequest) {
       // Type assert the payload
       const userPayload = payload as unknown as JWTPayload;
 
+      // Special handler for demo user
+      if (userPayload.userId === 'demo123' && userPayload.email === 'demo@vayo.com') {
+        return NextResponse.json({
+          user: {
+            id: 'demo123',
+            company: 'Demo Transport LLC',
+            email: 'demo@vayo.com',
+            role: 'owner',
+            truckCount: 5,
+            isPremium: true
+          }
+        });
+      }
+
       // Find user by ID
       const user = await User.findById(userPayload.userId);
       if (!user) {
