@@ -5,6 +5,89 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getCurrentUser, logoutUser } from '../lib/auth';
 
+// Sample map component to replace the LiveFleetMap integration
+function SampleMap({ vehicles }: { vehicles: MapVehicle[] }) {
+  return (
+    <div className="w-full h-[400px] bg-gray-100 rounded-xl relative overflow-hidden">
+      {/* Simple map background with grid lines */}
+      <div className="absolute inset-0 bg-[#EBF1FB]">
+        <div className="grid grid-cols-12 grid-rows-8 h-full w-full">
+          {Array.from({ length: 96 }).map((_, i) => (
+            <div key={i} className="border border-[#D5E3F7] opacity-40"></div>
+          ))}
+        </div>
+        
+        {/* Major "roads" */}
+        <div className="absolute top-1/4 left-0 right-0 h-1 bg-[#A8C3E8]"></div>
+        <div className="absolute top-2/3 left-0 right-0 h-1 bg-[#A8C3E8]"></div>
+        <div className="absolute left-1/3 top-0 bottom-0 w-1 bg-[#A8C3E8]"></div>
+        <div className="absolute left-3/4 top-0 bottom-0 w-1 bg-[#A8C3E8]"></div>
+        
+        {/* Vehicle indicators */}
+        {vehicles.slice(0, 6).map((vehicle, index) => {
+          // Generate random positions for vehicles
+          const top = 10 + Math.floor(Math.random() * 80);
+          const left = 10 + Math.floor(Math.random() * 80);
+          
+          return (
+            <div 
+              key={vehicle.id}
+              className="absolute w-4 h-4 rounded-full bg-indigo-600 shadow-md transform -translate-x-1/2 -translate-y-1/2"
+              style={{ 
+                top: `${top}%`, 
+                left: `${left}%`,
+                backgroundColor: vehicle.status === 'active' ? '#4F46E5' : 
+                                vehicle.status === 'idle' ? '#7C3AED' : '#DC2626'
+              }}
+              title={`${vehicle.licensePlate} - ${vehicle.driver}`}
+            >
+              <div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-50"></div>
+            </div>
+          );
+        })}
+        
+        {/* Map labels */}
+        <div className="absolute bottom-3 left-3 bg-white/70 p-2 rounded text-xs text-indigo-700 font-medium">Sample Map View</div>
+        <div className="absolute top-3 right-3 bg-white/70 p-2 rounded text-xs flex items-center">
+          <span className="w-2 h-2 rounded-full bg-indigo-600 mr-1"></span>
+          <span className="text-indigo-700">Active</span>
+          <span className="w-2 h-2 rounded-full bg-purple-600 mx-1 ml-2"></span>
+          <span className="text-indigo-700">Idle</span>
+          <span className="w-2 h-2 rounded-full bg-red-600 mx-1 ml-2"></span>
+          <span className="text-indigo-700">Maintenance</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Map loading and fallback components
+function MapLoadingPlaceholder() {
+  return (
+    <div className="flex items-center justify-center w-full h-[400px] bg-gray-50 rounded-xl">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto mb-2"></div>
+        <p className="text-indigo-700 text-sm">Loading map...</p>
+      </div>
+    </div>
+  );
+}
+
+function MapFallback() {
+  return (
+    <div className="flex flex-col items-center justify-center w-full h-[400px] bg-gray-50 rounded-xl">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-12 h-12 text-indigo-400 mb-3">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" />
+      </svg>
+      <p className="text-indigo-700">Map view not available</p>
+      <p className="text-indigo-500 text-sm">Please check your connection or try again later</p>
+      <Link href="/dashboard/fleet" className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors">
+        Go to Fleet Page
+      </Link>
+    </div>
+  );
+}
+
 interface UserData {
   id: string;
   company: string;
@@ -14,10 +97,73 @@ interface UserData {
   isPremium: boolean;
 }
 
+// Vehicle interface for displaying vehicle information
+interface Vehicle {
+  id: number;
+  name: string;
+  driver: string;
+  speed: number;
+  route: string;
+}
+
+// LiveFleetMap uses a different Vehicle interface
+interface MapVehicle {
+  id: string;
+  licensePlate: string;
+  driver: string;
+  model: string;
+  status: 'active' | 'idle' | 'maintenance';
+  location?: {
+    lat: number;
+    lng: number;
+    route: string;
+    speed: number;
+  };
+}
+
 export default function Dashboard() {
   const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [mapVehicles, setMapVehicles] = useState<MapVehicle[]>([]);
   const router = useRouter();
+
+  // Generate random vehicle data
+  useEffect(() => {
+    if (user) {
+      const vehicleCount = user.truckCount || 5;
+      const drivers = ['Vikram Singh', 'Priya Mehta', 'Rahul Kumar', 'Aisha Patel', 'Deepak Verma', 'Sanya Sharma', 'Aditya Reddy'];
+      const models = ['TATA LPT 2518', 'Ashok Leyland Boss', 'Mahindra Blazo', 'BharatBenz 1617R', 'Eicher Pro 6025'];
+      
+      // Generate random vehicle data
+      const mockVehicles: Vehicle[] = Array.from({ length: vehicleCount }, (_, i) => ({
+        id: i + 1,
+        name: `Truck ${i + 1}`,
+        driver: drivers[i % drivers.length],
+        speed: Math.floor(Math.random() * 80),
+        route: `Route ${Math.floor(Math.random() * 90) + 10}`
+      }));
+      
+      setVehicles(mockVehicles);
+      
+      // Create map vehicle data
+      const mockMapVehicles: MapVehicle[] = mockVehicles.map((v, i) => {
+        const status: ('active' | 'idle' | 'maintenance') = 
+          i < vehicleCount * 0.8 ? 'active' : 
+          i < vehicleCount * 0.95 ? 'idle' : 'maintenance';
+        
+        return {
+          id: `VEH-${v.id}`,
+          licensePlate: `MH-${10 + Math.floor(Math.random() * 90)}-${1000 + Math.floor(Math.random() * 9000)}`,
+          driver: v.driver,
+          model: models[i % models.length],
+          status: status
+        };
+      });
+      
+      setMapVehicles(mockMapVehicles);
+    }
+  }, [user]);
 
   useEffect(() => {
     // Check if user is logged in
@@ -223,6 +369,32 @@ export default function Dashboard() {
             </div>
           </div>
           
+          {/* Map Integration */}
+          <div className="bg-white rounded-xl shadow-sm border border-indigo-100 p-6 mb-8">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-indigo-900">Live Fleet Tracking</h2>
+              <div className="flex gap-2">
+                <button onClick={() => alert('View refreshed!')} className="text-indigo-600 hover:bg-indigo-50 p-2 rounded-md transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                  </svg>
+                </button>
+                <Link href="/dashboard/fleet" className="text-indigo-600 hover:text-indigo-800 text-sm flex items-center">
+                  View Full Map
+                </Link>
+              </div>
+            </div>
+            
+            {/* Map with fallback */}
+            {mapVehicles.length > 0 ? (
+              <div className="relative">
+                <SampleMap vehicles={mapVehicles} />
+              </div>
+            ) : (
+              <MapFallback />
+            )}
+          </div>
+          
           {/* Quick Actions */}
           <div className="bg-white rounded-xl shadow-sm border border-indigo-100 p-6">
             <h2 className="text-xl font-semibold mb-4 text-indigo-900">Quick Actions</h2>
@@ -257,7 +429,7 @@ export default function Dashboard() {
           {/* Live View */}
           <div className="bg-white rounded-xl shadow-sm border border-indigo-100 p-6 mb-8">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-indigo-900">Live Fleet View</h2>
+              <h2 className="text-xl font-semibold text-indigo-900">Fleet Overview</h2>
               <div className="flex gap-2">
                 <button onClick={() => alert('View refreshed!')} className="text-indigo-600 hover:bg-indigo-50 p-2 rounded-md transition-colors">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -272,58 +444,33 @@ export default function Dashboard() {
               </div>
             </div>
             
-            {/* Map Placeholder */}
-            <div className="bg-indigo-50 rounded-lg h-96 mb-4 flex items-center justify-center relative">
-              <div className="absolute inset-0 p-4">
-                <div className="grid grid-cols-3 h-full">
-                  {Array.from({ length: user.truckCount }).map((_, index) => (
-                    <div 
-                      key={index}
-                      style={{ 
-                        position: 'absolute',
-                        left: `${20 + Math.random() * 60}%`, 
-                        top: `${20 + Math.random() * 60}%` 
-                      }}
-                      className="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center text-white text-xs cursor-pointer transform hover:scale-110 transition-transform"
-                      onClick={() => alert(`Truck ${index + 1} Details - Location: ${Math.floor(Math.random() * 100)}° N, ${Math.floor(Math.random() * 100)}° W`)}
-                    >
-                      T{index + 1}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="text-indigo-400">
-                Interactive map with vehicle locations
-              </div>
-            </div>
-            
             {/* Current Active Vehicles */}
             <div>
               <h3 className="text-md font-medium text-indigo-900 mb-3">Active Vehicles</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {Array.from({ length: Math.min(3, user.truckCount) }).map((_, index) => (
-                  <div key={index} className="p-3 border border-indigo-100 rounded-lg flex items-center justify-between cursor-pointer hover:bg-indigo-50 transition-colors" onClick={() => alert(`Truck ${index + 1} Details`)}>
+                {vehicles.map((vehicle) => (
+                  <div key={vehicle.id} className="p-3 border border-indigo-100 rounded-lg flex items-center justify-between cursor-pointer hover:bg-indigo-50 transition-colors" onClick={() => alert(`Truck ${vehicle.id} Details`)}>
                     <div className="flex items-center">
                       <div className="h-2 w-2 rounded-full bg-green-500 mr-3"></div>
                       <div>
-                        <div className="font-medium text-indigo-900">Truck {index + 1}</div>
-                        <div className="text-sm text-indigo-600">Driver: {['Vikram S.', 'Priya M.', 'Rahul K.'][index]}</div>
+                        <div className="font-medium text-indigo-900">{vehicle.name}</div>
+                        <div className="text-sm text-indigo-600">Driver: {vehicle.driver}</div>
                       </div>
                     </div>
                     <div className="text-xs text-indigo-500 text-right">
-                      <div>Speed: {Math.floor(Math.random() * 80)} km/h</div>
-                      <div>Location: Route {Math.floor(Math.random() * 90) + 10}</div>
+                      <div>Speed: {vehicle.speed} km/h</div>
+                      <div>Location: {vehicle.route}</div>
                     </div>
                   </div>
                 ))}
               </div>
-              {user.truckCount > 3 && (
+              {vehicles.length > 6 && (
                 <div className="mt-3 text-center">
                   <button 
                     onClick={() => alert('View all vehicles feature will be available soon!')}
                     className="text-indigo-600 hover:text-indigo-800"
                   >
-                    View all {user.truckCount} vehicles
+                    View all {vehicles.length} vehicles
                   </button>
                 </div>
               )}

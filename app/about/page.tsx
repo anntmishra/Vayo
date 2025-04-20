@@ -59,12 +59,12 @@ export default function AboutPage() {
           </div>
           <div className="mt-10 lg:mt-0">
             <img 
-              src="/images/about-team.jpg" 
+              src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" 
               alt="Vayo team" 
               className="rounded-xl shadow-xl bg-indigo-100 w-full h-auto object-cover"
               onError={(e) => {
                 e.currentTarget.onerror = null;
-                e.currentTarget.src = 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80';
+                e.currentTarget.src = 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80';
               }}
             />
           </div>
@@ -171,7 +171,7 @@ export default function AboutPage() {
             <div className="relative">
               <img
                 className="mx-auto h-56 w-56 rounded-full object-cover shadow-lg bg-indigo-100"
-                src="/images/team-member-3.jpg"
+                src="/images/jay.jpeg"
                 alt="Jay Wardhan Suri"
                 onError={(e) => {
                   e.currentTarget.onerror = null;

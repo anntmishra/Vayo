@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import LiveFleetMap from '../../components/LiveFleetMap';
 
 interface UserData {
   id: string;
@@ -22,6 +23,12 @@ interface Vehicle {
   lastService: string;
   driver: string;
   fuelLevel: number;
+  location?: {
+    lat: number;
+    lng: number;
+    route: string;
+    speed: number;
+  };
 }
 
 export default function Fleet() {
@@ -74,6 +81,7 @@ export default function Fleet() {
     const models = ['Eicher Pro 5000', 'Tata Prima', 'Mahindra Blazo', 'Ashok Leyland Captain', 'BharatBenz 3723R'];
     const status: ('active' | 'idle' | 'maintenance')[] = ['active', 'active', 'active', 'idle', 'maintenance'];
     const indianNames = ['Vikram Singh', 'Priya Mehta', 'Rahul Kumar', 'Ananya Patel', 'Raj Sharma', 'Neha Verma', 'Arjun Reddy', 'Deepika Gupta', 'Suresh Iyer', 'Meena Kapoor'];
+    const routes = ['Route 90', 'Route 44', 'Route 66', 'Route 32', 'Route 15'];
     
     const mockVehicles: Vehicle[] = [];
     
@@ -89,6 +97,12 @@ export default function Fleet() {
       const serviceDate = new Date();
       serviceDate.setDate(serviceDate.getDate() - Math.floor(Math.random() * 90));
       
+      // Random position within India bounds (approx)
+      const lat = 17 + Math.random() * 10; // Between 17-27 deg N
+      const lng = 72 + Math.random() * 12; // Between 72-84 deg E
+      const route = routes[Math.floor(Math.random() * routes.length)];
+      const speed = status === 'active' ? Math.floor(10 + Math.random() * 40) : 0;
+      
       mockVehicles.push({
         id: `VEH-${1000 + i}`,
         licensePlate: `TR-${Math.floor(1000 + Math.random() * 9000)}`,
@@ -97,7 +111,13 @@ export default function Fleet() {
         status: status,
         lastService: serviceDate.toISOString().split('T')[0],
         driver: indianNames[i % indianNames.length],
-        fuelLevel: Math.floor(Math.random() * 100)
+        fuelLevel: Math.floor(Math.random() * 100),
+        location: {
+          lat,
+          lng,
+          route,
+          speed
+        }
       });
     }
     
@@ -238,6 +258,56 @@ export default function Fleet() {
               </svg>
               Add Vehicle
             </button>
+          </div>
+
+          {/* Live Fleet View */}
+          <div className="mb-8">
+            <h2 className="text-xl font-bold text-indigo-900 mb-4 flex items-center justify-between">
+              <span>Live Fleet View</span>
+              <div className="flex items-center">
+                <button className="text-indigo-600 hover:text-indigo-800 p-1 rounded-full">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                  </svg>
+                </button>
+                <button className="text-indigo-600 hover:text-indigo-800 ml-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
+                  </svg>
+                </button>
+              </div>
+            </h2>
+            <LiveFleetMap vehicles={vehicles} />
+          </div>
+
+          {/* Active Vehicles */}
+          <div className="mb-8">
+            <h2 className="text-xl font-bold text-indigo-900 mb-4">Active Vehicles</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {vehicles
+                .filter(v => v.status === 'active')
+                .slice(0, 3)
+                .map((vehicle, index) => (
+                  <div key={`active-${vehicle.id}`} className="bg-white rounded-xl shadow-sm border border-indigo-100 p-4 flex items-center">
+                    <div className="h-8 w-8 rounded-full bg-green-100 text-green-800 flex items-center justify-center font-bold text-sm mr-3">
+                      {index + 1}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-medium">Truck {index + 1}</h3>
+                      <p className="text-sm text-indigo-500">Driver: {vehicle.driver}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm text-indigo-500">Speed: {vehicle.location?.speed || Math.floor(10 + Math.random() * 40)} km/h</p>
+                      <p className="text-sm text-indigo-500">Location: {vehicle.location?.route || `Route ${Math.floor(Math.random() * 100)}`}</p>
+                    </div>
+                  </div>
+                ))}
+            </div>
+            <div className="mt-4 text-center">
+              <button className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                View all {vehicles.filter(v => v.status === 'active').length} vehicles
+              </button>
+            </div>
           </div>
 
           {/* Filters */}

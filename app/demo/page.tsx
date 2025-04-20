@@ -200,10 +200,11 @@ export default function DemoPage() {
                           <select 
                             className="w-full px-3 py-2 border border-indigo-200 rounded-md cursor-pointer"
                             onChange={() => alert('Settings will be saved after login!')}
+                            defaultValue="Every 15 minutes"
                           >
                             <option>Every 1 minute</option>
                             <option>Every 5 minutes</option>
-                            <option selected>Every 15 minutes</option>
+                            <option>Every 15 minutes</option>
                             <option>Every 30 minutes</option>
                             <option>Every hour</option>
                           </select>
@@ -213,9 +214,10 @@ export default function DemoPage() {
                           <select 
                             className="w-full px-3 py-2 border border-indigo-200 rounded-md cursor-pointer"
                             onChange={() => alert('Settings will be saved after login!')}
+                            defaultValue="Medium"
                           >
                             <option>Low</option>
-                            <option selected>Medium</option>
+                            <option>Medium</option>
                             <option>High</option>
                             <option>Custom</option>
                           </select>

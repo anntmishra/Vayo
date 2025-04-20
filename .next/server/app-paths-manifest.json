@@ -1,9 +1,9 @@
 {
-  "/create-account/page": "app/create-account/page.js",
-  "/configure-fleet/page": "app/configure-fleet/page.js",
-  "/start-monitoring/page": "app/start-monitoring/page.js",
-  "/dashboard/add-vehicle/page": "app/dashboard/add-vehicle/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/api/auth/me/route": "app/api/auth/me/route.js",
+  "/demo/page": "app/demo/page.js",
   "/dashboard/page": "app/dashboard/page.js",
-  "/dashboard/add-driver/page": "app/dashboard/add-driver/page.js",
-  "/dashboard/team-access/page": "app/dashboard/team-access/page.js"
+  "/dashboard/fleet/page": "app/dashboard/fleet/page.js",
+  "/dashboard/reports/page": "app/dashboard/reports/page.js",
+  "/dashboard/settings/page": "app/dashboard/settings/page.js"
 }
