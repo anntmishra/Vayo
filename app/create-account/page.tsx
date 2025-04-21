@@ -1,8 +1,8 @@
 'use client';
 import Link from 'next/link';
-import { useState, FormEvent, ChangeEvent } from 'react';
+import { useState, FormEvent, ChangeEvent, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { registerUser } from '../lib/auth';
+import { registerUser, isLoggedIn } from '../lib/auth';
 
 interface FormData {
   company: string;
@@ -33,6 +33,17 @@ export default function CreateAccount() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
 
+  // Check if user is already logged in
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      if (await isLoggedIn()) {
+        router.push('/dashboard');
+      }
+    };
+    
+    checkLoginStatus();
+  }, [router]);
+
   const validateForm = () => {
     const newErrors: FormErrors = {};
     if (!formData.company) newErrors.company = 'Company name is required';
@@ -61,20 +72,36 @@ export default function CreateAccount() {
           truckCount: parseInt(formData.truckCount)
         };
 
-        // Use local storage authentication instead of API
-        registerUser({
-          email: formPayload.email,
-          password: formPayload.password,
-          name: formPayload.company
-        });
+        // Use Firebase authentication with additional user data
+        await registerUser(
+          formPayload.email, 
+          formPayload.password, 
+          formPayload.company
+        );
+
+        // Store additional data in localStorage for demo purposes
+        // In a real app, this would be stored in Firestore
+        localStorage.setItem('vayo_user_data', JSON.stringify({
+          company: formPayload.company,
+          phone: formPayload.phone,
+          truckCount: formPayload.truckCount
+        }, null, 2));
 
         // Registration successful
         router.push('/configure-fleet');
-      } catch (error) {
-        console.error('Registration error:', error);
+      } catch (error: any) {
+        console.error('Registration error details:', error);
+        // Display more detailed error message for debugging
+        let errorMessage = 'Failed to create account';
+        if (error.code) {
+          errorMessage = `Error (${error.code}): ${error.message}`;
+        } else if (error instanceof Error) {
+          errorMessage = error.message;
+        }
+        
         setErrors(prev => ({
           ...prev,
-          submit: error instanceof Error ? error.message : 'Failed to create account'
+          submit: errorMessage
         }));
       } finally {
         setIsLoading(false);
@@ -233,7 +260,7 @@ export default function CreateAccount() {
             
             <p className="mt-3 text-sm text-center text-indigo-700">
               Want to see how it works first?{' '}
-              <Link href="/demo" className="text-purple-600 hover:text-purple-800 font-medium">
+              <Link href="/demo" className="text-indigo-600 hover:text-indigo-800 font-medium">
                 Try our demo
               </Link>
             </p>

@@ -3,10 +3,27 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { getCurrentUser, logoutUser } from '../lib/auth';
+import { logoutUser } from '../lib/auth';
+import { useAuth } from '../lib/AuthContext';
+import { 
+  DemoCompany,
+  DemoVehicle,
+  DemoMapVehicle,
+  FleetStatusCounts,
+  ActivityStats,
+  DemoAlert,
+  WeeklyData,
+  getDemoCompanyForUser,
+  getDemoVehicles,
+  getDemoMapVehicles,
+  getFleetStatusCounts,
+  getActivityStats,
+  getDemoAlerts,
+  getWeeklyData
+} from '../lib/demoData';
 
 // Sample map component to replace the LiveFleetMap integration
-function SampleMap({ vehicles }: { vehicles: MapVehicle[] }) {
+function SampleMap({ vehicles }: { vehicles: DemoMapVehicle[] }) {
   return (
     <div className="w-full h-[400px] bg-gray-100 rounded-xl relative overflow-hidden">
       {/* Simple map background with grid lines */}
@@ -23,8 +40,8 @@ function SampleMap({ vehicles }: { vehicles: MapVehicle[] }) {
         <div className="absolute left-1/3 top-0 bottom-0 w-1 bg-[#A8C3E8]"></div>
         <div className="absolute left-3/4 top-0 bottom-0 w-1 bg-[#A8C3E8]"></div>
         
-        {/* Vehicle indicators */}
-        {vehicles.slice(0, 6).map((vehicle, index) => {
+        {/* Vehicle indicators - Only show if there are vehicles */}
+        {vehicles.length > 0 && vehicles.slice(0, 6).map((vehicle, index) => {
           // Generate random positions for vehicles
           const top = 10 + Math.floor(Math.random() * 80);
           const left = 10 + Math.floor(Math.random() * 80);
@@ -47,7 +64,7 @@ function SampleMap({ vehicles }: { vehicles: MapVehicle[] }) {
         })}
         
         {/* Map labels */}
-        <div className="absolute bottom-3 left-3 bg-white/70 p-2 rounded text-xs text-indigo-700 font-medium">Sample Map View</div>
+        <div className="absolute bottom-3 left-3 bg-white/70 p-2 rounded text-xs text-indigo-700 font-medium">Live Fleet Map</div>
         <div className="absolute top-3 right-3 bg-white/70 p-2 rounded text-xs flex items-center">
           <span className="w-2 h-2 rounded-full bg-indigo-600 mr-1"></span>
           <span className="text-indigo-700">Active</span>
@@ -124,87 +141,75 @@ interface MapVehicle {
 export default function Dashboard() {
   const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
-  const [mapVehicles, setMapVehicles] = useState<MapVehicle[]>([]);
+  const [vehicles, setVehicles] = useState<DemoVehicle[]>([]);
+  const [mapVehicles, setMapVehicles] = useState<DemoMapVehicle[]>([]);
+  const [fleetStatus, setFleetStatus] = useState<FleetStatusCounts | null>(null);
+  const [activityStats, setActivityStats] = useState<ActivityStats | null>(null);
+  const [alerts, setAlerts] = useState<DemoAlert[]>([]);
+  const [weeklyData, setWeeklyData] = useState<WeeklyData | null>(null);
   const router = useRouter();
+  const { user: authUser, loading: authLoading } = useAuth();
 
-  // Generate random vehicle data
+  // Generate data from demo module
   useEffect(() => {
     if (user) {
-      const vehicleCount = user.truckCount || 5;
-      const drivers = ['Vikram Singh', 'Priya Mehta', 'Rahul Kumar', 'Aisha Patel', 'Deepak Verma', 'Sanya Sharma', 'Aditya Reddy'];
-      const models = ['TATA LPT 2518', 'Ashok Leyland Boss', 'Mahindra Blazo', 'BharatBenz 1617R', 'Eicher Pro 6025'];
+      // Get demo vehicles based on truck count
+      const demoVehicles = getDemoVehicles(user.truckCount);
+      setVehicles(demoVehicles);
       
-      // Generate random vehicle data
-      const mockVehicles: Vehicle[] = Array.from({ length: vehicleCount }, (_, i) => ({
-        id: i + 1,
-        name: `Truck ${i + 1}`,
-        driver: drivers[i % drivers.length],
-        speed: Math.floor(Math.random() * 80),
-        route: `Route ${Math.floor(Math.random() * 90) + 10}`
-      }));
+      // Get demo map vehicles for live tracking
+      const demoMapVehicles = getDemoMapVehicles(user.truckCount);
+      setMapVehicles(demoMapVehicles);
       
-      setVehicles(mockVehicles);
+      // Get fleet status counts
+      setFleetStatus(getFleetStatusCounts(user.truckCount));
       
-      // Create map vehicle data
-      const mockMapVehicles: MapVehicle[] = mockVehicles.map((v, i) => {
-        const status: ('active' | 'idle' | 'maintenance') = 
-          i < vehicleCount * 0.8 ? 'active' : 
-          i < vehicleCount * 0.95 ? 'idle' : 'maintenance';
-        
-        return {
-          id: `VEH-${v.id}`,
-          licensePlate: `MH-${10 + Math.floor(Math.random() * 90)}-${1000 + Math.floor(Math.random() * 9000)}`,
-          driver: v.driver,
-          model: models[i % models.length],
-          status: status
-        };
-      });
+      // Get activity statistics
+      setActivityStats(getActivityStats(user.truckCount));
       
-      setMapVehicles(mockMapVehicles);
+      // Get alerts
+      setAlerts(getDemoAlerts());
+      
+      // Get weekly data
+      setWeeklyData(getWeeklyData(user.truckCount));
     }
   }, [user]);
 
   useEffect(() => {
-    // Check if user is logged in
-    const checkAuth = () => {
-      try {
-        const currentUser = getCurrentUser();
-        if (currentUser) {
-          // Create a mock user object from the local storage user data
-          setUser({
-            id: `user-${Math.floor(Math.random() * 10000)}`,
-            company: currentUser.name || 'Company Name',
-            email: currentUser.email,
-            role: 'admin',
-            truckCount: 8,
-            isPremium: false
-          });
-        } else {
-          // If not logged in, redirect to login page
-          router.push('/login');
-        }
-      } catch (error) {
-        console.error('Authentication error:', error);
-        router.push('/login');
-      } finally {
+    // Use AuthContext instead of direct auth function calls
+    if (!authLoading) {
+      if (authUser) {
+        // Get demo company data based on the user's email
+        const demoCompany = getDemoCompanyForUser(authUser.email);
+        
+        // Create a user object combining Firebase auth and demo data
+        setUser({
+          id: authUser.uid || `user-${Math.floor(Math.random() * 10000)}`,
+          company: authUser.name || demoCompany.name,
+          email: authUser.email,
+          role: demoCompany.role,
+          truckCount: demoCompany.truckCount,
+          isPremium: demoCompany.isPremium
+        });
+        
         setLoading(false);
+      } else {
+        // If not logged in, redirect to login page
+        router.push('/login');
       }
-    };
+    }
+  }, [authUser, authLoading, router]);
 
-    checkAuth();
-  }, [router]);
-
-  const handleLogout = () => {
+  const handleLogout = async () => {
     try {
-      logoutUser();
+      await logoutUser();
       router.push('/login');
     } catch (error) {
       console.error('Logout error:', error);
     }
   };
 
-  if (loading) {
+  if (loading || authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -235,7 +240,7 @@ export default function Dashboard() {
           </nav>
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <p className="text-sm text-indigo-900">{user.company}</p>
+              <p className="text-sm text-indigo-900">{user.company || "Your Company"}</p>
               <p className="text-xs text-indigo-500">{user.email}</p>
             </div>
             <div className="relative group">
@@ -309,15 +314,15 @@ export default function Dashboard() {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-indigo-500">Active</span>
-                  <span className="font-medium text-indigo-900">{Math.floor(user.truckCount * 0.8)}</span>
+                  <span className="font-medium text-indigo-900">{fleetStatus?.active || 0}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-indigo-500">Idle</span>
-                  <span className="font-medium text-indigo-900">{Math.ceil(user.truckCount * 0.15)}</span>
+                  <span className="font-medium text-indigo-900">{fleetStatus?.idle || 0}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-indigo-500">Maintenance</span>
-                  <span className="font-medium text-indigo-900">{Math.ceil(user.truckCount * 0.05)}</span>
+                  <span className="font-medium text-indigo-900">{fleetStatus?.maintenance || 0}</span>
                 </div>
               </div>
             </div>
@@ -334,15 +339,15 @@ export default function Dashboard() {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-indigo-500">Deliveries</span>
-                  <span className="font-medium text-indigo-900">{Math.floor(user.truckCount * 1.5)}</span>
+                  <span className="font-medium text-indigo-900">{activityStats?.deliveries || 0}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-indigo-500">Distance</span>
-                  <span className="font-medium text-indigo-900">{user.truckCount * 120} km</span>
+                  <span className="font-medium text-indigo-900">{activityStats?.distance || 0} km</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-indigo-500">Fuel Used</span>
-                  <span className="font-medium text-indigo-900">{user.truckCount * 15} L</span>
+                  <span className="font-medium text-indigo-900">{activityStats?.fuelUsed || 0} L</span>
                 </div>
               </div>
             </div>
@@ -357,14 +362,32 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="space-y-4">
-                <div className="p-3 bg-amber-50 rounded-lg border border-amber-100 text-sm">
-                  <p className="font-medium text-amber-800">Maintenance Due</p>
-                  <p className="text-amber-700">Vehicle TB-{Math.floor(Math.random() * 1000)} scheduled service</p>
-                </div>
-                <div className="p-3 bg-red-50 rounded-lg border border-red-100 text-sm">
-                  <p className="font-medium text-red-800">Hard Braking</p>
-                  <p className="text-red-700">Vehicle TB-{Math.floor(Math.random() * 1000)} at 13:45</p>
-                </div>
+                {alerts.length > 0 ? (
+                  alerts.map((alert, index) => (
+                    <div 
+                      key={index} 
+                      className={`p-3 ${
+                        alert.type === 'warning' ? 'bg-amber-50 border-amber-100' : 'bg-red-50 border-red-100'
+                      } rounded-lg border text-sm`}
+                    >
+                      <p className={`font-medium ${
+                        alert.type === 'warning' ? 'text-amber-800' : 'text-red-800'
+                      }`}>{alert.title}</p>
+                      <p className={
+                        alert.type === 'warning' ? 'text-amber-700' : 'text-red-700'
+                      }>{alert.description}</p>
+                    </div>
+                  ))
+                ) : (
+                  <div className="h-full flex items-center justify-center p-6">
+                    <div className="text-center text-indigo-400">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 mx-auto mb-2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                      </svg>
+                      <p>No alerts to display</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -447,31 +470,46 @@ export default function Dashboard() {
             {/* Current Active Vehicles */}
             <div>
               <h3 className="text-md font-medium text-indigo-900 mb-3">Active Vehicles</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {vehicles.map((vehicle) => (
-                  <div key={vehicle.id} className="p-3 border border-indigo-100 rounded-lg flex items-center justify-between cursor-pointer hover:bg-indigo-50 transition-colors" onClick={() => alert(`Truck ${vehicle.id} Details`)}>
-                    <div className="flex items-center">
-                      <div className="h-2 w-2 rounded-full bg-green-500 mr-3"></div>
-                      <div>
-                        <div className="font-medium text-indigo-900">{vehicle.name}</div>
-                        <div className="text-sm text-indigo-600">Driver: {vehicle.driver}</div>
+              {vehicles && vehicles.length > 0 ? (
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {vehicles.map((vehicle) => (
+                      <div key={vehicle.id} className="p-3 border border-indigo-100 rounded-lg flex items-center justify-between cursor-pointer hover:bg-indigo-50 transition-colors" onClick={() => alert(`Truck ${vehicle.id} Details`)}>
+                        <div className="flex items-center">
+                          <div className="h-2 w-2 rounded-full bg-green-500 mr-3"></div>
+                          <div>
+                            <div className="font-medium text-indigo-900">{vehicle.name}</div>
+                            <div className="text-sm text-indigo-600">Driver: {vehicle.driver}</div>
+                          </div>
+                        </div>
+                        <div className="text-xs text-indigo-500 text-right">
+                          <div>Speed: {vehicle.speed} km/h</div>
+                          <div>Location: {vehicle.route}</div>
+                        </div>
                       </div>
-                    </div>
-                    <div className="text-xs text-indigo-500 text-right">
-                      <div>Speed: {vehicle.speed} km/h</div>
-                      <div>Location: {vehicle.route}</div>
-                    </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-              {vehicles.length > 6 && (
-                <div className="mt-3 text-center">
-                  <button 
-                    onClick={() => alert('View all vehicles feature will be available soon!')}
-                    className="text-indigo-600 hover:text-indigo-800"
-                  >
-                    View all {vehicles.length} vehicles
-                  </button>
+                  {vehicles.length > 6 && (
+                    <div className="mt-3 text-center">
+                      <button 
+                        onClick={() => alert('View all vehicles feature will be available soon!')}
+                        className="text-indigo-600 hover:text-indigo-800"
+                      >
+                        View all {vehicles.length} vehicles
+                      </button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="py-8 text-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-12 h-12 text-indigo-300 mx-auto mb-3">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
+                  </svg>
+                  <p className="text-indigo-700 font-medium">No vehicles available</p>
+                  <p className="text-indigo-500 text-sm mt-1">Add vehicles to your fleet to see them here</p>
+                  <Link href="/dashboard/fleet" className="inline-block mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors">
+                    Add Vehicle
+                  </Link>
                 </div>
               )}
             </div>
@@ -491,7 +529,7 @@ export default function Dashboard() {
                 <div>
                   <h3 className="text-sm font-medium text-indigo-700 mb-2">Distance Traveled</h3>
                   <div className="flex items-end space-x-1">
-                    {[65, 85, 45, 75, 90, 50, 70].map((height, index) => (
+                    {weeklyData?.distance.values.map((height, index) => (
                       <div key={index} className="flex-1 flex flex-col items-center">
                         <div
                           className="w-full bg-indigo-500 rounded-t"
@@ -504,15 +542,15 @@ export default function Dashboard() {
                     ))}
                   </div>
                   <div className="flex justify-between mt-2">
-                    <span className="text-sm text-indigo-700">Total: <span className="font-medium">{user.truckCount * 120 * 7} km</span></span>
-                    <span className="text-xs text-green-600">↑ 12% vs last week</span>
+                    <span className="text-sm text-indigo-700">Total: <span className="font-medium">{weeklyData?.distance.total || 0} km</span></span>
+                    <span className="text-xs text-green-600">↑ {weeklyData?.distance.changePercent === 0 ? '' : (weeklyData?.distance.changePercent || 0) > 0 ? '↑' : '↓'} {Math.abs(weeklyData?.distance.changePercent || 0)}%</span>
                   </div>
                 </div>
                 
                 <div>
                   <h3 className="text-sm font-medium text-indigo-700 mb-2">Fuel Consumption</h3>
                   <div className="flex items-end space-x-1">
-                    {[50, 70, 30, 80, 40, 30, 60].map((height, index) => (
+                    {weeklyData?.fuel.values.map((height, index) => (
                       <div key={index} className="flex-1 flex flex-col items-center">
                         <div
                           className="w-full bg-purple-500 rounded-t"
@@ -525,28 +563,28 @@ export default function Dashboard() {
                     ))}
                   </div>
                   <div className="flex justify-between mt-2">
-                    <span className="text-sm text-indigo-700">Total: <span className="font-medium">{user.truckCount * 15 * 7} L</span></span>
-                    <span className="text-xs text-green-600">↓ 5% vs last week</span>
+                    <span className="text-sm text-indigo-700">Total: <span className="font-medium">{weeklyData?.fuel.total || 0} L</span></span>
+                    <span className="text-xs text-green-600">↓ {weeklyData?.fuel.changePercent === 0 ? '' : (weeklyData?.fuel.changePercent || 0) > 0 ? '↑' : '↓'} {Math.abs(weeklyData?.fuel.changePercent || 0)}%</span>
                   </div>
                 </div>
                 
                 <div>
                   <h3 className="text-sm font-medium text-indigo-700 mb-2">Driver Scores</h3>
                   <div className="space-y-3">
-                    {['Vikram Singh', 'Priya Mehta', 'Rahul Kumar'].map((driver, index) => (
+                    {weeklyData?.drivers.names.map((driver, index) => (
                       <div key={index} className="space-y-1">
                         <div className="flex justify-between text-sm">
                           <span>{driver}</span>
-                          <span className="font-medium">{85 - (index * 5)}</span>
+                          <span className="font-medium">{weeklyData.drivers.scores[index]}</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <div 
                             className={`h-2 rounded-full ${
-                              85 - (index * 5) > 85 ? 'bg-green-500' : 
-                              85 - (index * 5) > 70 ? 'bg-indigo-500' : 
-                              85 - (index * 5) > 60 ? 'bg-amber-500' : 'bg-red-500'
+                              weeklyData?.drivers.scores[index] > 85 ? 'bg-green-500' : 
+                              weeklyData?.drivers.scores[index] > 70 ? 'bg-indigo-500' : 
+                              weeklyData?.drivers.scores[index] > 60 ? 'bg-amber-500' : 'bg-red-500'
                             }`} 
-                            style={{ width: `${85 - (index * 5)}%` }}
+                            style={{ width: `${weeklyData?.drivers.scores[index]}%` }}
                           ></div>
                         </div>
                       </div>
@@ -568,4 +606,4 @@ export default function Dashboard() {
       </main>
     </div>
   );
-} 
+}

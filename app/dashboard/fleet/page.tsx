@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import LiveFleetMap from '../../components/LiveFleetMap';
+import { useAuth } from '../../lib/AuthContext';
+import { getDemoCompanyForUser } from '../../lib/demoData';
 
 interface UserData {
   id: string;
@@ -50,77 +52,38 @@ export default function Fleet() {
     driver: ''
   });
   const router = useRouter();
+  const { user: authUser, loading: authLoading } = useAuth();
 
   useEffect(() => {
-    // Check if user is logged in
-    const checkAuth = async () => {
-      try {
-        const response = await fetch('/api/auth/me');
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data.user);
-          
-          // Generate mock vehicle data based on truck count
-          generateMockVehicles(data.user.truckCount);
-        } else {
-          // If not logged in, redirect to login page
-          router.push('/login');
-        }
-      } catch (error) {
-        console.error('Authentication error:', error);
-        router.push('/login');
-      } finally {
+    // Use AuthContext instead of direct API call
+    if (!authLoading) {
+      if (authUser) {
+        // Get demo company data based on the user's email
+        const demoCompany = getDemoCompanyForUser(authUser.email);
+        
+        // Create a user object combining Firebase auth and demo data
+        setUser({
+          id: authUser.uid || `user-${Math.floor(Math.random() * 10000)}`,
+          company: authUser.name || demoCompany.name,
+          email: authUser.email,
+          role: demoCompany.role,
+          truckCount: demoCompany.truckCount,
+          isPremium: demoCompany.isPremium
+        });
+        
+        // Generate mock vehicle data based on truck count
+        generateMockVehicles(demoCompany.truckCount);
         setLoading(false);
+      } else {
+        // If not logged in, redirect to login page
+        router.push('/login');
       }
-    };
-
-    checkAuth();
-  }, [router]);
+    }
+  }, [authUser, authLoading, router]);
 
   const generateMockVehicles = (count: number) => {
-    const models = ['Eicher Pro 5000', 'Tata Prima', 'Mahindra Blazo', 'Ashok Leyland Captain', 'BharatBenz 3723R'];
-    const status: ('active' | 'idle' | 'maintenance')[] = ['active', 'active', 'active', 'idle', 'maintenance'];
-    const indianNames = ['Vikram Singh', 'Priya Mehta', 'Rahul Kumar', 'Ananya Patel', 'Raj Sharma', 'Neha Verma', 'Arjun Reddy', 'Deepika Gupta', 'Suresh Iyer', 'Meena Kapoor'];
-    const routes = ['Route 90', 'Route 44', 'Route 66', 'Route 32', 'Route 15'];
-    
+    // Return empty array regardless of count
     const mockVehicles: Vehicle[] = [];
-    
-    for (let i = 1; i <= count; i++) {
-      const statusIndex = Math.floor(Math.random() * 100);
-      let status: 'active' | 'idle' | 'maintenance';
-      
-      // Make 80% active, 15% idle, 5% maintenance
-      if (statusIndex < 80) status = 'active';
-      else if (statusIndex < 95) status = 'idle';
-      else status = 'maintenance';
-      
-      const serviceDate = new Date();
-      serviceDate.setDate(serviceDate.getDate() - Math.floor(Math.random() * 90));
-      
-      // Random position within India bounds (approx)
-      const lat = 17 + Math.random() * 10; // Between 17-27 deg N
-      const lng = 72 + Math.random() * 12; // Between 72-84 deg E
-      const route = routes[Math.floor(Math.random() * routes.length)];
-      const speed = status === 'active' ? Math.floor(10 + Math.random() * 40) : 0;
-      
-      mockVehicles.push({
-        id: `VEH-${1000 + i}`,
-        licensePlate: `TR-${Math.floor(1000 + Math.random() * 9000)}`,
-        model: models[Math.floor(Math.random() * models.length)],
-        year: 2018 + Math.floor(Math.random() * 6),
-        status: status,
-        lastService: serviceDate.toISOString().split('T')[0],
-        driver: indianNames[i % indianNames.length],
-        fuelLevel: Math.floor(Math.random() * 100),
-        location: {
-          lat,
-          lng,
-          route,
-          speed
-        }
-      });
-    }
-    
     setVehicles(mockVehicles);
   };
 

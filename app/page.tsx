@@ -67,11 +67,11 @@ export default function Home() {
                     <div className="grid grid-cols-2 gap-2 text-sm">
                       <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-2 rounded">
                         <div className="font-medium text-indigo-900">Active Vehicles</div>
-                        <div className="text-indigo-600 font-bold">243</div>
+                        <div className="text-indigo-600 font-bold">0</div>
                       </div>
                       <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-2 rounded">
                         <div className="font-medium text-indigo-900">Fuel Efficiency</div>
-                        <div className="text-indigo-600 font-bold">+12.4%</div>
+                        <div className="text-indigo-600 font-bold">0%</div>
                       </div>
                     </div>
                   </div>
@@ -146,7 +146,7 @@ export default function Home() {
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl text-white p-12 text-center">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to transform your transport operations?</h2>
               <p className="text-white/80 mb-8 max-w-2xl mx-auto">
-                Join hundreds of transport companies already using Vayo to optimize their fleet operations.
+                Join transport companies already using Vayo to optimize their fleet operations.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/get-started" className="bg-white text-indigo-600 hover:bg-indigo-50 py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-all inline-block">

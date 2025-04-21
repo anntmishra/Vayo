@@ -11,20 +11,35 @@
       "static/chunks/main-app.js",
       "static/chunks/app/page.js"
     ],
-    "/demo/page": [
+    "/get-started/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/demo/page.js"
+      "static/chunks/app/get-started/page.js"
     ],
-    "/api/auth/login/route": [
+    "/create-account/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/api/auth/login/route.js"
+      "static/chunks/app/create-account/page.js"
+    ],
+    "/configure-fleet/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/configure-fleet/page.js"
+    ],
+    "/start-monitoring/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/start-monitoring/page.js"
     ],
     "/dashboard/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/dashboard/page.js"
+    ],
+    "/login/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/login/page.js"
     ],
     "/dashboard/fleet/page": [
       "static/chunks/webpack.js",
@@ -45,6 +60,16 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/dashboard/settings/page.js"
+    ],
+    "/api/auth/logout/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/auth/logout/route.js"
+    ],
+    "/_not-found/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/_not-found/page.js"
     ]
   }
 }

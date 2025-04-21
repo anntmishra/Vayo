@@ -1,8 +1,5 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
-import * as jose from "jose";
-
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 
 // Define public routes that don't require authentication
 const publicRoutes = [
@@ -15,6 +12,13 @@ const publicRoutes = [
   "/api/auth/logout",
   "/_next",
   "/favicon.ico",
+  // Additional public routes
+  "/about",
+  "/contact",
+  "/solutions",
+  "/pricing",
+  "/get-started",
+  "/demo",
 ];
 
 export async function middleware(request: NextRequest) {
@@ -25,32 +29,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check for session token
-  const sessionToken = request.cookies.get("session_token")?.value;
+  // Check for Firebase auth token in cookies
+  const authToken = request.cookies.get("firebase_auth_token")?.value;
 
-  if (!sessionToken) {
+  if (!authToken) {
     return redirectToLogin(request);
   }
 
-  try {
-    // Verify the token using jose
-    const secretKey = new TextEncoder().encode(JWT_SECRET);
-    const { payload } = await jose.jwtVerify(sessionToken, secretKey);
-
-    // Add user info to headers for route handlers
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-user-id", payload.userId as string);
-    requestHeaders.set("x-user-role", payload.role as string);
-
-    // Continue to route with added headers
-    return NextResponse.next({
-      headers: requestHeaders,
-    });
-  } catch (error) {
-    // Token is invalid or expired
-    console.error("JWT verification failed:", error);
-    return redirectToLogin(request);
-  }
+  // At this point, we have a token but we won't verify it here
+  // Firebase client SDK will handle token verification when the page loads
+  // This is a simpler approach for client-side Firebase auth
+  return NextResponse.next();
 }
 
 function redirectToLogin(request: NextRequest) {

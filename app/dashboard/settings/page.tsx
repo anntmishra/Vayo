@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useAuth } from '../../lib/AuthContext';
+import { getDemoCompanyForUser } from '../../lib/demoData';
 
 interface UserData {
   id: string;
@@ -41,34 +43,39 @@ export default function Settings() {
   const [timezone, setTimezone] = useState('UTC');
   
   const router = useRouter();
+  const { user: authUser, loading: authLoading } = useAuth();
 
   useEffect(() => {
-    // Check if user is logged in
-    const checkAuth = async () => {
-      try {
-        const response = await fetch('/api/auth/me');
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data.user);
-          
-          // Initialize form with user data
-          setCompanyName(data.user.company);
-          setEmail(data.user.email);
-          setPhone(''); // Assuming phone isn't returned from API
-        } else {
-          // If not logged in, redirect to login page
-          router.push('/login');
-        }
-      } catch (error) {
-        console.error('Authentication error:', error);
-        router.push('/login');
-      } finally {
+    // Use AuthContext instead of direct API call
+    if (!authLoading) {
+      if (authUser) {
+        // Get demo company data based on the user's email
+        const demoCompany = getDemoCompanyForUser(authUser.email);
+        
+        // Create a user object combining Firebase auth and demo data
+        const userData = {
+          id: authUser.uid || `user-${Math.floor(Math.random() * 10000)}`,
+          company: authUser.name || demoCompany.name,
+          email: authUser.email,
+          role: demoCompany.role,
+          truckCount: demoCompany.truckCount,
+          isPremium: demoCompany.isPremium
+        };
+        
+        setUser(userData);
+        
+        // Initialize form with user data
+        setCompanyName(userData.company);
+        setEmail(userData.email);
+        setPhone(''); // Assuming phone isn't returned from API
+        
         setLoading(false);
+      } else {
+        // If not logged in, redirect to login page
+        router.push('/login');
       }
-    };
-
-    checkAuth();
-  }, [router]);
+    }
+  }, [authUser, authLoading, router]);
 
   const handleAccountSubmit = (e: React.FormEvent) => {
     e.preventDefault();

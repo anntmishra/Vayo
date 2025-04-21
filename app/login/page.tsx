@@ -1,8 +1,9 @@
 'use client';
 import Link from 'next/link';
-import { useState, FormEvent, ChangeEvent } from 'react';
+import { useState, FormEvent, ChangeEvent, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { loginUser } from '../lib/auth';
+import { loginUser, isLoggedIn } from '../lib/auth';
+import { auth } from '../lib/firebase';
 
 interface FormData {
   email: string;
@@ -26,6 +27,17 @@ export default function Login() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
 
+  // Check if user is already logged in
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      if (await isLoggedIn()) {
+        router.push('/dashboard');
+      }
+    };
+    
+    checkLoginStatus();
+  }, [router]);
+
   const validateForm = () => {
     const newErrors: FormErrors = {};
     if (!formData.email) newErrors.email = 'Email is required';
@@ -41,15 +53,29 @@ export default function Login() {
     if (validateForm()) {
       setIsLoading(true);
       try {
-        // Use the local storage auth instead of API
-        loginUser(formData.email.trim().toLowerCase(), formData.password);
+        // Add debugging information
+        console.log('Firebase auth object:', auth);
+        console.log('Firebase auth initialized:', !!auth);
+        console.log('Firebase auth app:', !!auth.app);
+        
+        // Use Firebase authentication
+        await loginUser(formData.email.trim().toLowerCase(), formData.password);
         
         // Login successful - redirect to dashboard
         router.push('/dashboard');
-      } catch (error) {
+      } catch (error: any) {
+        console.error('Login error details:', error);
+        // Display more detailed error message for debugging
+        let errorMessage = 'Invalid email or password';
+        if (error.code) {
+          errorMessage = `Error (${error.code}): ${error.message}`;
+        } else if (error instanceof Error) {
+          errorMessage = error.message;
+        }
+        
         setErrors(prev => ({
           ...prev,
-          submit: error instanceof Error ? error.message : 'Invalid email or password'
+          submit: errorMessage
         }));
       } finally {
         setIsLoading(false);

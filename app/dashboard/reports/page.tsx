@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useAuth } from '../../lib/AuthContext';
+import { getDemoCompanyForUser } from '../../lib/demoData';
 
 interface UserData {
   id: string;
@@ -27,32 +29,34 @@ export default function Reports() {
   const [reportTimeframe, setReportTimeframe] = useState('week');
   const [reportData, setReportData] = useState<ReportData | null>(null);
   const router = useRouter();
+  const { user: authUser, loading: authLoading } = useAuth();
 
   useEffect(() => {
-    // Check if user is logged in
-    const checkAuth = async () => {
-      try {
-        const response = await fetch('/api/auth/me');
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data.user);
-          
-          // Generate mock report data
-          generateMockReportData(data.user.truckCount);
-        } else {
-          // If not logged in, redirect to login page
-          router.push('/login');
-        }
-      } catch (error) {
-        console.error('Authentication error:', error);
-        router.push('/login');
-      } finally {
+    // Use AuthContext instead of direct API call
+    if (!authLoading) {
+      if (authUser) {
+        // Get demo company data based on the user's email
+        const demoCompany = getDemoCompanyForUser(authUser.email);
+        
+        // Create a user object combining Firebase auth and demo data
+        setUser({
+          id: authUser.uid || `user-${Math.floor(Math.random() * 10000)}`,
+          company: authUser.name || demoCompany.name,
+          email: authUser.email,
+          role: demoCompany.role,
+          truckCount: demoCompany.truckCount,
+          isPremium: demoCompany.isPremium
+        });
+        
+        // Generate mock report data based on truck count
+        generateMockReportData(demoCompany.truckCount);
         setLoading(false);
+      } else {
+        // If not logged in, redirect to login page
+        router.push('/login');
       }
-    };
-
-    checkAuth();
-  }, [router]);
+    }
+  }, [authUser, authLoading, router]);
 
   useEffect(() => {
     if (user) {
@@ -63,41 +67,26 @@ export default function Reports() {
   const generateMockReportData = (truckCount: number) => {
     let days = reportTimeframe === 'week' ? 7 : reportTimeframe === 'month' ? 30 : 90;
     
-    // Generate daily distance data
-    const dailyDistance = Array.from({ length: days }, () => 
-      (50 + Math.random() * 30) * truckCount
-    );
+    // Generate daily distance data with zeros
+    const dailyDistance = Array.from({ length: days }, () => 0);
     
-    // Generate fuel consumption data
-    const fuelConsumption = Array.from({ length: days }, () => 
-      (15 + Math.random() * 8) * truckCount
-    );
+    // Generate fuel consumption data with zeros
+    const fuelConsumption = Array.from({ length: days }, () => 0);
     
-    // Generate driver scores
-    const indianNames = ['Vikram Singh', 'Priya Mehta', 'Rahul Kumar', 'Ananya Patel', 'Raj Sharma', 'Neha Verma', 'Arjun Reddy', 'Deepika Gupta', 'Suresh Iyer', 'Meena Kapoor'];
-    const driverScores = Array.from({ length: Math.min(10, truckCount) }, (_, i) => ({
-      name: indianNames[i],
-      score: 60 + Math.floor(Math.random() * 40)
-    })).sort((a, b) => b.score - a.score);
+    // Generate empty driver scores
+    const driverScores: {name: string; score: number}[] = [];
     
-    // Generate cost breakdown
-    const totalCost = 1000 * truckCount;
+    // Generate empty cost breakdown
     const costBreakdown = [
-      { category: 'Fuel', value: totalCost * (0.4 + Math.random() * 0.1) },
-      { category: 'Maintenance', value: totalCost * (0.2 + Math.random() * 0.05) },
-      { category: 'Insurance', value: totalCost * (0.15 + Math.random() * 0.05) },
-      { category: 'Tolls', value: totalCost * (0.1 + Math.random() * 0.03) },
-      { category: 'Other', value: totalCost * (0.05 + Math.random() * 0.02) }
+      { category: 'Fuel', value: 0 },
+      { category: 'Maintenance', value: 0 },
+      { category: 'Insurance', value: 0 },
+      { category: 'Tolls', value: 0 },
+      { category: 'Other', value: 0 }
     ];
     
-    // Ensure total is exactly totalCost
-    const currentTotal = costBreakdown.reduce((sum, item) => sum + item.value, 0);
-    costBreakdown[0].value += (totalCost - currentTotal);
-    
-    // Generate emissions data
-    const emissions = Array.from({ length: days }, () => 
-      (80 + Math.random() * 20) * truckCount
-    );
+    // Generate emissions data with zeros
+    const emissions = Array.from({ length: days }, () => 0);
     
     setReportData({
       dailyDistance,

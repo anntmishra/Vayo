@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String?
+  name          String?
+  company       Company?  @relation(fields: [companyId], references: [id])
+  companyId     String?
+  role          String    @default("user") // admin, user, driver
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Company {
+  id            String    @id @default(cuid())
+  name          String
+  users         User[]
+  vehicles      Vehicle[]
+  isPremium     Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Vehicle {
+  id            String    @id @default(cuid())
+  name          String
+  licensePlate  String
+  model         String
+  year          Int
+  status        String    @default("active") // active, idle, maintenance
+  company       Company   @relation(fields: [companyId], references: [id])
+  companyId     String
+  driver        Driver?   @relation(fields: [driverId], references: [id])
+  driverId      String?
+  fuelLevel     Int       @default(100)
+  lastService   DateTime  @default(now())
+  logs          VehicleLog[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Driver {
+  id            String    @id @default(cuid())
+  name          String
+  phone         String?
+  licenseNumber String
+  vehicles      Vehicle[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model VehicleLog {
+  id            String    @id @default(cuid())
+  vehicle       Vehicle   @relation(fields: [vehicleId], references: [id])
+  vehicleId     String
+  speed         Int?
+  latitude      Float?
+  longitude     Float?
+  route         String?
+  fuelLevel     Int?
+  status        String?
+  timestamp     DateTime  @default(now())
+}
+
+model WeeklySummary {
+  id            String    @id @default(cuid())
+  companyId     String
+  week          Int
+  year          Int
+  distanceTotal Int
+  fuelTotal     Int
+  distanceChangePct Float
+  fuelChangePct Float
+  dailyDistances Json    // Array of daily distances
+  dailyFuel     Json    // Array of daily fuel consumption
+  createdAt     DateTime  @default(now())
+}
+
+model DriverScore {
+  id            String    @id @default(cuid())
+  driverName    String
+  score         Int
+  week          Int
+  year          Int
+  companyId     String
+  createdAt     DateTime  @default(now())
+}
+
+model Alert {
+  id            String    @id @default(cuid())
+  type          String    // warning, danger
+  title         String
+  description   String
+  companyId     String
+  isRead        Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+} 
